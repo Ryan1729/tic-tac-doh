@@ -24,11 +24,35 @@ view model =
             ]
             [ text "test Button" ]
         , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ pyramid Pawn 140 100
-            , pyramid Drone 300 100
-            , pyramid Queen 460 100
+            [ pyramid Pawn 140 400
+            , pyramid Drone 300 400
+            , pyramid Pawn 300 (below Drone 400)
+              --nest
+            , pyramid Queen 460 400
+            , pyramid Drone 460 (below Queen 400)
+            , pyramid Pawn 460 (below Drone (below Queen 400))
+              --tree
+            , pyramid Queen 140 200
+            , pyramid Drone 140 (above Drone 200)
+            , pyramid Pawn 140 (above Pawn (above Drone 200))
             ]
         ]
+
+
+
+--size of thing placed above this
+
+
+below size y =
+    y - (getScale size * 1 / 5)
+
+
+
+--size of thing being placed above
+
+
+above size y =
+    y - (getScale size * 7 / 5)
 
 
 pawnPyramidPathSuffix =
@@ -67,19 +91,22 @@ getDots size x y =
     let
         scale =
             getScale size
+
+        pawnScale =
+            getScale Pawn
     in
         [ ellipse
-            [ (x + (scale * 5 / 12))
+            [ (x + (-scale * 5 / 12))
                 |> toString
                 |> cx
-            , (y + 2 * scale)
+            , (y + -scale)
                 |> toString
                 |> cy
-            , scale
+            , pawnScale
                 / 7
                 |> toString
                 |> rx
-            , scale
+            , pawnScale
                 / 5
                 |> toString
                 |> ry
@@ -99,11 +126,11 @@ pyramidPathSuffix scale =
         doubleSclaeString =
             toString (2 * scale)
     in
-        (" l -" ++ sclaeString ++ " " ++ doubleSclaeString)
-            ++ (" l " ++ sclaeString ++ " " ++ sclaeString)
-            ++ (" l " ++ sclaeString ++ " -" ++ sclaeString)
+        (" l " ++ sclaeString ++ " -" ++ sclaeString)
             ++ ("l -" ++ sclaeString ++ " -" ++ doubleSclaeString)
-            ++ (" l 0 " ++ toString (3 * scale))
+            ++ (" l -" ++ sclaeString ++ " " ++ doubleSclaeString)
+            ++ (" l " ++ sclaeString ++ " " ++ sclaeString)
+            ++ (" l 0 " ++ toString (-3 * scale))
 
 
 pyramid : Size -> Float -> Float -> Svg Msg
@@ -128,6 +155,7 @@ pyramid size x y =
             [ d dString
             , stroke "grey"
             , strokeWidth "2"
+            , fillOpacity "0.0"
             ]
             []
         ]
