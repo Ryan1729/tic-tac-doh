@@ -4,7 +4,7 @@ import Model exposing (Model, Size(..))
 import Html exposing (Html, text)
 import Msg exposing (Msg(..))
 import Material.Button as Button
-import Svg exposing (Svg, svg, circle, polygon, Attribute)
+import Svg exposing (Svg, svg, polygon, Attribute, ellipse, g)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
 
@@ -32,15 +32,62 @@ view model =
 
 
 pawnPyramidPathSuffix =
-    pyramidPathSuffix 30
+    Pawn
+        |> getScale
+        |> pyramidPathSuffix
 
 
 dronePyramidPathSuffix =
-    pyramidPathSuffix 40
+    Drone
+        |> getScale
+        |> pyramidPathSuffix
 
 
 queenPyramidPathSuffix =
-    pyramidPathSuffix (160 / 3)
+    Queen
+        |> getScale
+        |> pyramidPathSuffix
+
+
+getScale : Size -> Float
+getScale size =
+    case size of
+        Queen ->
+            (160 / 3)
+
+        Drone ->
+            40
+
+        Pawn ->
+            30
+
+
+getDots : Size -> Float -> Float -> List (Svg Msg)
+getDots size x y =
+    let
+        scale =
+            getScale size
+    in
+        [ ellipse
+            [ (x + (scale * 5 / 12))
+                |> toString
+                |> cx
+            , (y + 2 * scale)
+                |> toString
+                |> cy
+            , scale
+                / 7
+                |> toString
+                |> rx
+            , scale
+                / 5
+                |> toString
+                |> ry
+            , stroke "#888888"
+            , fillOpacity "0.0"
+            ]
+            []
+        ]
 
 
 pyramidPathSuffix : Float -> String
@@ -77,9 +124,12 @@ pyramid size x y =
                     Pawn ->
                         pawnPyramidPathSuffix
     in
-        Svg.path
+        [ Svg.path
             [ d dString
             , stroke "grey"
             , strokeWidth "2"
             ]
             []
+        ]
+            ++ getDots size x y
+            |> g []
