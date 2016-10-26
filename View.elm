@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Model exposing (Model)
+import Model exposing (Model, Size(..))
 import Html exposing (Html, text)
 import Msg exposing (Msg(..))
 import Material.Button as Button
@@ -24,14 +24,23 @@ view model =
             ]
             [ text "test Button" ]
         , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ pyramid 300 100
-            , pyramid 460 100
+            [ pyramid Pawn 140 100
+            , pyramid Drone 300 100
+            , pyramid Queen 460 100
             ]
         ]
 
 
-largePyramidPathSuffix =
-    pyramidPathSuffix 70
+pawnPyramidPathSuffix =
+    pyramidPathSuffix 30
+
+
+dronePyramidPathSuffix =
+    pyramidPathSuffix 40
+
+
+queenPyramidPathSuffix =
+    pyramidPathSuffix (160 / 3)
 
 
 pyramidPathSuffix : Float -> String
@@ -50,15 +59,23 @@ pyramidPathSuffix scale =
             ++ (" l 0 " ++ toString (3 * scale))
 
 
-pyramid : Float -> Float -> Svg Msg
-pyramid x y =
+pyramid : Size -> Float -> Float -> Svg Msg
+pyramid size x y =
     let
         dString =
             "M "
                 ++ toString x
                 ++ " "
                 ++ toString y
-                ++ largePyramidPathSuffix
+                ++ case size of
+                    Queen ->
+                        queenPyramidPathSuffix
+
+                    Drone ->
+                        dronePyramidPathSuffix
+
+                    Pawn ->
+                        pawnPyramidPathSuffix
     in
         Svg.path
             [ d dString

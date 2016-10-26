@@ -9,3 +9,9 @@ type alias Model =
 
 defaultState =
     { mdl = Material.model }
+
+
+type Size
+    = Queen
+    | Drone
+    | Pawn
