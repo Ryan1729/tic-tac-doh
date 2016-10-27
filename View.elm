@@ -157,6 +157,34 @@ dotAttributes dotScale =
     ]
 
 
+middleY =
+    9 / 10
+
+
+queen2ndX =
+    21 / 32
+
+
+queen2ndY =
+    17 / 16
+
+
+queen3rdX =
+    26 / 32
+
+
+queen3rdY =
+    19 / 16
+
+
+drone2ndX =
+    3 / 4
+
+
+drone2ndY =
+    11 / 10
+
+
 getDots : Size -> Float -> Float -> List (Svg Msg)
 getDots size x y =
     let
@@ -166,51 +194,88 @@ getDots size x y =
         pawnScale =
             getScale Pawn
 
-        middleDot =
+        leftMiddleDot =
             dot pawnScale
                 [ (x + (-scale / 2))
                     |> toString
                     |> cx
-                , (y + -(scale * 9 / 10))
+                , (y + -(scale * middleY))
+                    |> toString
+                    |> cy
+                ]
+
+        rightMiddleDot =
+            dot pawnScale
+                [ (x + (scale / 2))
+                    |> toString
+                    |> cx
+                , (y + -(scale * middleY))
                     |> toString
                     |> cy
                 ]
     in
         case size of
             Queen ->
-                [ middleDot
+                [ leftMiddleDot
                 , dot (pawnScale * 31 / 32)
-                    [ (x + (-scale * 21 / 32))
+                    [ (x + (-scale * queen2ndX))
                         |> toString
                         |> cx
-                    , (y - (scale * 17 / 16))
+                    , (y - (scale * queen2ndY))
                         |> toString
                         |> cy
                     ]
                 , dot (pawnScale * 30 / 32)
-                    [ (x + (-scale * 26 / 32))
+                    [ (x + (-scale * queen3rdX))
                         |> toString
                         |> cx
-                    , (y - (scale * 19 / 16))
+                    , (y - (scale * queen3rdY))
+                        |> toString
+                        |> cy
+                    ]
+                , rightMiddleDot
+                , dot (pawnScale * 33 / 32)
+                    [ (x + (scale * (1 - queen2ndX)))
+                        |> toString
+                        |> cx
+                    , (y - (scale * ((2 * middleY) - (queen2ndY))))
+                        |> toString
+                        |> cy
+                    ]
+                , dot (pawnScale * 34 / 32)
+                    [ (x + (scale * (1 - queen3rdX)))
+                        |> toString
+                        |> cx
+                    , (y - (scale * ((2 * middleY) - (queen3rdY))))
                         |> toString
                         |> cy
                     ]
                 ]
 
             Drone ->
-                [ middleDot
+                [ leftMiddleDot
                 , dot (pawnScale * 31 / 32)
-                    [ (x + (-scale * 3 / 4))
+                    [ (x + (-scale * drone2ndX))
                         |> toString
                         |> cx
-                    , (y - (scale * 11 / 10))
+                    , (y - (scale * drone2ndY))
+                        |> toString
+                        |> cy
+                    ]
+                , rightMiddleDot
+                , dot (pawnScale * 33 / 32)
+                    [ (x + (scale * (1 - drone2ndX)))
+                        |> toString
+                        |> cx
+                    , (y - (scale * ((2 * middleY) - drone2ndY)))
                         |> toString
                         |> cy
                     ]
                 ]
 
             Pawn ->
-                [ middleDot
+                [ leftMiddleDot
+                , rightMiddleDot
                 ]
 
 
