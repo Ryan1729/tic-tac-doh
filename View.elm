@@ -24,22 +24,8 @@ view model =
             ]
             [ text "test Button" ]
         , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ renderBoard 140 400 EmptyBoard
-            , (Single Pawn)
-                |> OneByOne
-                |> renderBoard 140 200
-            , (Single Drone)
-                |> OneByOne
-                |> renderBoard 300 200
-            , (Single Queen)
-                |> OneByOne
-                |> renderBoard 460 200
-              -- , TwoByTwo
-              --     { zeroZero : Maybe Stack
-              --     , zeroOne : Maybe Stack
-              --     , oneZero : Maybe Stack
-              --     , oneOne : Maybe Stack
-              --     }
+            [ Model.twoByTwo (Just <| Single Pawn) (Just <| Single Drone) (Just <| Single Queen) Nothing
+                |> renderBoard
               -- , ThreeByThree
               --     { zeroZero : Maybe Stack
               --     , zeroOne : Maybe Stack
@@ -55,54 +41,105 @@ view model =
         ]
 
 
-renderBoard : Float -> Float -> Board -> Svg Msg
-renderBoard x y board =
+boardWidth =
+    600
+
+
+boardHeight =
+    600
+
+
+centerX =
+    boardWidth / 2
+
+
+centerY =
+    boardHeight / 2
+
+
+renderBoard : Board -> Svg Msg
+renderBoard board =
     case board of
         EmptyBoard ->
-            space x y
+            space centerX centerY
 
         OneByOne stack ->
             g []
-                [ space x y
-                , renderStack stack x y
-                ]
+                <| spaceAndStack centerX centerY
+                <| Just stack
 
-        _ ->
-            space x y
+        TwoByTwo spaces ->
+            g []
+                <| spaceAndStack centerX centerY spaces.zeroZero
+                ++ spaceAndStack (centerX + spaceOffset) (centerY + spaceOffset) spaces.zeroOne
+                ++ spaceAndStack (centerX - spaceOffset) (centerY + spaceOffset) spaces.oneZero
+                ++ spaceAndStack centerX (centerY + 2 * spaceOffset) spaces.oneOne
+
+        ThreeByThree spaces ->
+            space centerX centerY
+
+
+spaceAndStack x y maybeStack =
+    case maybeStack of
+        Just stack ->
+            [ space x y
+            , renderStack stack x y
+            ]
+
+        Nothing ->
+            [ space x y ]
+
+
+nullSvg =
+    Svg.polygon [] []
 
 
 square x =
     x ^ 2
 
 
+queenScale =
+    getScale Queen
+
+
+queenScaleString =
+    toString queenScale
+
+
+spaceSideLength =
+    sqrt (2.5 * square queenScale) * 7 / 5
+
+
+halfSpaceSideLength =
+    spaceSideLength / 2
+
+
+spaceOffset =
+    sqrt (square spaceSideLength / 2)
+
+
+spaceOffsetString =
+    toString spaceOffset
+
+
+minusSpaceOffsetString =
+    toString -spaceOffset
+
+
+spaceSuffix =
+    (" m 0 " ++ toString (queenScale / 2))
+        ++ (" l " ++ spaceOffsetString ++ " " ++ minusSpaceOffsetString)
+        ++ (" l " ++ minusSpaceOffsetString ++ " " ++ minusSpaceOffsetString)
+        ++ (" l " ++ minusSpaceOffsetString ++ " " ++ spaceOffsetString)
+        ++ (" l " ++ spaceOffsetString ++ " " ++ spaceOffsetString)
+
+
 space : Float -> Float -> Svg Msg
 space x y =
     let
-        queenScale =
-            getScale Queen
-
-        queenScaleString =
-            toString queenScale
-
-        spaceSideLength =
-            sqrt (2.5 * square queenScale) * 7 / 5
-
-        spaceOffset =
-            sqrt (square spaceSideLength / 2)
-
-        spaceOffsetString =
-            toString spaceOffset
-
-        minusSpaceOffsetString =
-            toString -spaceOffset
-
         dString =
             ("M " ++ toString x ++ " " ++ toString y)
-                ++ (" m 0 " ++ toString (queenScale / 2))
-                ++ (" l " ++ spaceOffsetString ++ " " ++ minusSpaceOffsetString)
-                ++ (" l " ++ minusSpaceOffsetString ++ " " ++ minusSpaceOffsetString)
-                ++ (" l " ++ minusSpaceOffsetString ++ " " ++ spaceOffsetString)
-                ++ (" l " ++ spaceOffsetString ++ " " ++ spaceOffsetString)
+                ++ spaceSuffix
     in
         g []
             [ Svg.path
