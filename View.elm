@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Model exposing (Model, Size(..), Stack(..))
+import Model exposing (Model, Size(..), Stack(..), Board(..))
 import Html exposing (Html, text)
 import Msg exposing (Msg(..))
 import Material.Button as Button
@@ -24,17 +24,95 @@ view model =
             ]
             [ text "test Button" ]
         , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ renderStack (Single Queen) 140 200
-            , renderStack (FullTree) 300 200
-            , renderStack (PartialTree) 460 200
-            , renderStack (DroneTree) 140 400
-            , renderStack (NoDroneTree) 300 400
-            , renderStack (FullNest) 460 400
-            , renderStack (PartialNest) 140 600
-            , renderStack (DroneNest) 300 600
-            , renderStack (NoDroneNest) 460 600
+            [ renderBoard 140 400 EmptyBoard
+            , (Single Pawn)
+                |> OneByOne
+                |> renderBoard 140 200
+            , (Single Drone)
+                |> OneByOne
+                |> renderBoard 300 200
+            , (Single Queen)
+                |> OneByOne
+                |> renderBoard 460 200
+              -- , TwoByTwo
+              --     { zeroZero : Maybe Stack
+              --     , zeroOne : Maybe Stack
+              --     , oneZero : Maybe Stack
+              --     , oneOne : Maybe Stack
+              --     }
+              -- , ThreeByThree
+              --     { zeroZero : Maybe Stack
+              --     , zeroOne : Maybe Stack
+              --     , zeroTwo : Maybe Stack
+              --     , oneZero : Maybe Stack
+              --     , oneOne : Maybe Stack
+              --     , oneTwo : Maybe Stack
+              --     , twoOne : Maybe Stack
+              --     , twoZero : Maybe Stack
+              --     , twoTwo : Maybe Stack
+              --     }
             ]
         ]
+
+
+renderBoard : Float -> Float -> Board -> Svg Msg
+renderBoard x y board =
+    case board of
+        EmptyBoard ->
+            space x y
+
+        OneByOne stack ->
+            g []
+                [ space x y
+                , renderStack stack x y
+                ]
+
+        _ ->
+            space x y
+
+
+square x =
+    x ^ 2
+
+
+space : Float -> Float -> Svg Msg
+space x y =
+    let
+        queenScale =
+            getScale Queen
+
+        queenScaleString =
+            toString queenScale
+
+        spaceSideLength =
+            sqrt (2.5 * square queenScale) * 7 / 5
+
+        spaceOffset =
+            sqrt (square spaceSideLength / 2)
+
+        spaceOffsetString =
+            toString spaceOffset
+
+        minusSpaceOffsetString =
+            toString -spaceOffset
+
+        dString =
+            ("M " ++ toString x ++ " " ++ toString y)
+                ++ (" m 0 " ++ toString (queenScale / 2))
+                ++ (" l " ++ spaceOffsetString ++ " " ++ minusSpaceOffsetString)
+                ++ (" l " ++ minusSpaceOffsetString ++ " " ++ minusSpaceOffsetString)
+                ++ (" l " ++ minusSpaceOffsetString ++ " " ++ spaceOffsetString)
+                ++ (" l " ++ spaceOffsetString ++ " " ++ spaceOffsetString)
+    in
+        g []
+            [ Svg.path
+                [ d dString
+                , stroke "black"
+                , fill "#444444"
+                , strokeWidth "4"
+                ]
+                []
+            ]
 
 
 renderStack : Stack -> Float -> Float -> Svg Msg
