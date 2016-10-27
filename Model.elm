@@ -32,11 +32,21 @@ type Stack
 type Board
     = EmptyBoard
     | OneByOne Stack
+    | OneByTwo (Maybe Stack) (Maybe Stack)
+    | OneByThree (Maybe Stack) (Maybe Stack) (Maybe Stack)
     | TwoByTwo
         { zeroZero : Maybe Stack
         , zeroOne : Maybe Stack
         , oneZero : Maybe Stack
         , oneOne : Maybe Stack
+        }
+    | TwoByThree
+        { zeroZero : Maybe Stack
+        , zeroOne : Maybe Stack
+        , zeroThree : Maybe Stack
+        , oneZero : Maybe Stack
+        , oneOne : Maybe Stack
+        , oneThree : Maybe Stack
         }
     | ThreeByThree
         { zeroZero : Maybe Stack

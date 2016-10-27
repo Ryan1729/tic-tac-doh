@@ -75,7 +75,8 @@ renderBoard board =
                 ++ spaceAndStack (centerX - spaceOffset) (centerY + spaceOffset) spaces.oneZero
                 ++ spaceAndStack centerX (centerY + 2 * spaceOffset) spaces.oneOne
 
-        ThreeByThree spaces ->
+        _ ->
+            -- ThreeByThree spaces ->
             space centerX centerY
 
 
