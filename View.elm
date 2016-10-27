@@ -24,7 +24,9 @@ view model =
             ]
             [ text "test Button" ]
         , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ Model.twoByTwo (Just <| Single Pawn) (Just <| Single Drone) (Just <| Single Queen) Nothing
+            [ Model.OneByThree (Just <| Single Pawn)
+                (Just <| Single Drone)
+                (Just <| Single Queen)
                 |> renderBoard
               -- , ThreeByThree
               --     { zeroZero : Maybe Stack
@@ -67,6 +69,17 @@ renderBoard board =
             g []
                 <| spaceAndStack centerX centerY
                 <| Just stack
+
+        OneByTwo stack0 stack1 ->
+            g []
+                <| spaceAndStack (centerX - halfSpaceOffset) (centerY - halfSpaceOffset) stack0
+                ++ spaceAndStack (centerX + halfSpaceOffset) (centerY + halfSpaceOffset) stack1
+
+        OneByThree stack0 stack1 stack2 ->
+            g []
+                <| spaceAndStack (centerX - spaceOffset) (centerY - spaceOffset) stack0
+                ++ spaceAndStack centerX centerY stack1
+                ++ spaceAndStack (centerX + spaceOffset) (centerY + spaceOffset) stack2
 
         TwoByTwo spaces ->
             g []
@@ -111,12 +124,12 @@ spaceSideLength =
     sqrt (2.5 * square queenScale) * 7 / 5
 
 
-halfSpaceSideLength =
-    spaceSideLength / 2
-
-
 spaceOffset =
     sqrt (square spaceSideLength / 2)
+
+
+halfSpaceOffset =
+    spaceOffset / 2
 
 
 spaceOffsetString =
