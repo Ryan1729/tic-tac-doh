@@ -43,10 +43,10 @@ type Board
     | TwoByThree
         { zeroZero : Maybe Stack
         , zeroOne : Maybe Stack
-        , zeroThree : Maybe Stack
+        , zeroTwo : Maybe Stack
         , oneZero : Maybe Stack
         , oneOne : Maybe Stack
-        , oneThree : Maybe Stack
+        , oneTwo : Maybe Stack
         }
     | ThreeByThree
         { zeroZero : Maybe Stack
@@ -67,6 +67,17 @@ twoByTwo zeroZero zeroOne oneZero oneOne =
         , zeroOne = zeroOne
         , oneZero = oneZero
         , oneOne = oneOne
+        }
+
+
+twoByThree zeroZero zeroOne zeroTwo oneZero oneOne oneTwo =
+    TwoByThree
+        { zeroZero = zeroZero
+        , zeroOne = zeroOne
+        , zeroTwo = zeroTwo
+        , oneZero = oneZero
+        , oneOne = oneOne
+        , oneTwo = oneTwo
         }
 
 

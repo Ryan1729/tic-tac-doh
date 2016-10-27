@@ -24,7 +24,10 @@ view model =
             ]
             [ text "test Button" ]
         , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ Model.OneByThree (Just <| Single Pawn)
+            [ Model.twoByThree (Just <| Single Pawn)
+                (Just <| Single Drone)
+                (Just <| Single Queen)
+                (Just <| Single Pawn)
                 (Just <| Single Drone)
                 (Just <| Single Queen)
                 |> renderBoard
@@ -67,33 +70,53 @@ renderBoard board =
 
         OneByOne stack ->
             g []
-                <| spaceAndStack centerX centerY
-                <| Just stack
+                <| spaceAndStack (Just stack) atCenter
 
         OneByTwo stack0 stack1 ->
             g []
-                <| spaceAndStack (centerX - halfSpaceOffset) (centerY - halfSpaceOffset) stack0
-                ++ spaceAndStack (centerX + halfSpaceOffset) (centerY + halfSpaceOffset) stack1
+                <| spaceAndStack stack0 (fromCenter -halfSpaceOffset -halfSpaceOffset)
+                ++ spaceAndStack stack1 (fromCenter halfSpaceOffset halfSpaceOffset)
 
         OneByThree stack0 stack1 stack2 ->
             g []
-                <| spaceAndStack (centerX - spaceOffset) (centerY - spaceOffset) stack0
-                ++ spaceAndStack centerX centerY stack1
-                ++ spaceAndStack (centerX + spaceOffset) (centerY + spaceOffset) stack2
+                <| spaceAndStack stack0 (fromCenter -spaceOffset -spaceOffset)
+                ++ spaceAndStack stack1 atCenter
+                ++ spaceAndStack stack2 (fromCenter spaceOffset spaceOffset)
 
         TwoByTwo spaces ->
             g []
-                <| spaceAndStack centerX centerY spaces.zeroZero
-                ++ spaceAndStack (centerX + spaceOffset) (centerY + spaceOffset) spaces.zeroOne
-                ++ spaceAndStack (centerX - spaceOffset) (centerY + spaceOffset) spaces.oneZero
-                ++ spaceAndStack centerX (centerY + 2 * spaceOffset) spaces.oneOne
+                <| spaceAndStack spaces.zeroZero atCenter
+                ++ spaceAndStack spaces.zeroOne (fromCenter spaceOffset spaceOffset)
+                ++ spaceAndStack spaces.oneZero (fromCenter -spaceOffset spaceOffset)
+                ++ spaceAndStack spaces.oneOne (fromCenter 0 (2 * spaceOffset))
+
+        TwoByThree spaces ->
+            g []
+                <| spaceAndStack spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
+                ++ spaceAndStack spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
+                ++ spaceAndStack spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
+                ++ spaceAndStack spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
+                ++ spaceAndStack spaces.oneOne (fromCenter -halfSpaceOffset (threeHalfsSpaceOffset))
+                ++ spaceAndStack spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
 
         _ ->
             -- ThreeByThree spaces ->
             space centerX centerY
 
 
-spaceAndStack x y maybeStack =
+atCenter =
+    ( centerX, centerY )
+
+
+fromCenter x y =
+    ( centerX + x, centerY + y )
+
+
+tupleAdd ( x, y ) ( xOffset, yOffset ) =
+    ( x + xOffset, y + yOffset )
+
+
+spaceAndStack maybeStack ( x, y ) =
     case maybeStack of
         Just stack ->
             [ space x y
@@ -134,6 +157,10 @@ halfSpaceOffset =
 
 spaceOffsetString =
     toString spaceOffset
+
+
+threeHalfsSpaceOffset =
+    halfSpaceOffset * 3
 
 
 minusSpaceOffsetString =
