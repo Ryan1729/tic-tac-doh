@@ -167,7 +167,7 @@ getDots size x y =
                 / 5
                 |> toString
                 |> ry
-            , stroke "#888888"
+            , stroke "#EEEEEE"
             , fillOpacity "0.0"
             ]
             []
@@ -212,7 +212,7 @@ pyramid size x y =
             [ d dString
             , stroke "grey"
             , strokeWidth "2"
-            , fillOpacity "0.0"
+            , fillOpacity "0.4"
             ]
             []
         ]
