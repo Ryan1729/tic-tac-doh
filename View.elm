@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Model exposing (Model, Size(..))
+import Model exposing (Model, Size(..), Stack(..))
 import Html exposing (Html, text)
 import Msg exposing (Msg(..))
 import Material.Button as Button
@@ -24,19 +24,76 @@ view model =
             ]
             [ text "test Button" ]
         , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ pyramid Pawn 140 400
-            , pyramid Drone 300 400
-            , pyramid Pawn 300 (below Drone 400)
-              --nest
-            , pyramid Queen 460 400
-            , pyramid Drone 460 (below Queen 400)
-            , pyramid Pawn 460 (below Drone (below Queen 400))
-              --tree
-            , pyramid Queen 140 200
-            , pyramid Drone 140 (above Drone 200)
-            , pyramid Pawn 140 (above Pawn (above Drone 200))
+            [ renderStack (Single Queen) 140 200
+            , renderStack (FullTree) 300 200
+            , renderStack (PartialTree) 460 200
+            , renderStack (DroneTree) 140 400
+            , renderStack (NoDroneTree) 300 400
+            , renderStack (FullNest) 460 400
+            , renderStack (PartialNest) 140 600
+            , renderStack (DroneNest) 300 600
+            , renderStack (NoDroneNest) 460 600
             ]
         ]
+
+
+renderStack : Stack -> Float -> Float -> Svg Msg
+renderStack stack x y =
+    case stack of
+        Single size ->
+            pyramid size x y
+
+        FullTree ->
+            g []
+                [ pyramid Queen x y
+                , pyramid Drone x (above Drone y)
+                , pyramid Pawn x (above Pawn (above Drone y))
+                ]
+
+        PartialTree ->
+            g []
+                [ pyramid Queen x y
+                , pyramid Drone x (above Drone y)
+                ]
+
+        DroneTree ->
+            g []
+                [ pyramid Drone x y
+                , pyramid Pawn x (above Pawn y)
+                ]
+
+        NoDroneTree ->
+            g []
+                [ pyramid Queen x y
+                , --special case
+                  pyramid Pawn x (above Pawn (above Pawn y))
+                ]
+
+        FullNest ->
+            g []
+                [ pyramid Pawn x (below Drone (below Queen y))
+                , pyramid Drone x (below Queen y)
+                , pyramid Queen x y
+                ]
+
+        PartialNest ->
+            g []
+                [ pyramid Pawn x (below Drone (below Queen y))
+                , pyramid Drone x (below Queen y)
+                ]
+
+        DroneNest ->
+            g []
+                [ pyramid Drone x (below Queen y)
+                , pyramid Queen x y
+                ]
+
+        NoDroneNest ->
+            g []
+                [ --special case
+                  pyramid Pawn x (below Queen (below Queen y))
+                , pyramid Queen x y
+                ]
 
 
 

@@ -15,3 +15,15 @@ type Size
     = Queen
     | Drone
     | Pawn
+
+
+type Stack
+    = Single Size
+    | FullTree
+    | PartialTree
+    | DroneTree
+    | NoDroneTree
+    | FullNest
+    | PartialNest
+    | DroneNest
+    | NoDroneNest
