@@ -143,6 +143,20 @@ getScale size =
             30
 
 
+dotAttributes dotScale =
+    [ stroke "#EEEEEE"
+    , fillOpacity "0.0"
+    , dotScale
+        / 9
+        |> toString
+        |> rx
+    , dotScale
+        / 7
+        |> toString
+        |> ry
+    ]
+
+
 getDots : Size -> Float -> Float -> List (Svg Msg)
 getDots size x y =
     let
@@ -151,27 +165,61 @@ getDots size x y =
 
         pawnScale =
             getScale Pawn
+
+        middleDot =
+            dot pawnScale
+                [ (x + (-scale / 2))
+                    |> toString
+                    |> cx
+                , (y + -(scale * 9 / 10))
+                    |> toString
+                    |> cy
+                ]
     in
-        [ ellipse
-            [ (x + (-scale * 5 / 12))
-                |> toString
-                |> cx
-            , (y + -scale)
-                |> toString
-                |> cy
-            , pawnScale
-                / 7
-                |> toString
-                |> rx
-            , pawnScale
-                / 5
-                |> toString
-                |> ry
-            , stroke "#EEEEEE"
-            , fillOpacity "0.0"
-            ]
-            []
-        ]
+        case size of
+            Queen ->
+                [ middleDot
+                , dot (pawnScale * 31 / 32)
+                    [ (x + (-scale * 21 / 32))
+                        |> toString
+                        |> cx
+                    , (y - (scale * 17 / 16))
+                        |> toString
+                        |> cy
+                    ]
+                , dot (pawnScale * 30 / 32)
+                    [ (x + (-scale * 26 / 32))
+                        |> toString
+                        |> cx
+                    , (y - (scale * 19 / 16))
+                        |> toString
+                        |> cy
+                    ]
+                ]
+
+            Drone ->
+                [ middleDot
+                , dot (pawnScale * 31 / 32)
+                    [ (x + (-scale * 3 / 4))
+                        |> toString
+                        |> cx
+                    , (y - (scale * 11 / 10))
+                        |> toString
+                        |> cy
+                    ]
+                ]
+
+            Pawn ->
+                [ middleDot
+                ]
+
+
+dot dotScale attributes =
+    ellipse
+        (attributes
+            ++ dotAttributes dotScale
+        )
+        []
 
 
 pyramidPathSuffix : Float -> String
