@@ -33,32 +33,32 @@ type Stack
 type Board
     = EmptyBoard
     | OneByOne Stack
-    | OneByTwo (Maybe Stack) (Maybe Stack)
-    | OneByThree (Maybe Stack) (Maybe Stack) (Maybe Stack)
+    | OneByTwo Stack Stack
+    | OneByThree Stack Stack Stack
     | TwoByTwo
-        { zeroZero : Maybe Stack
-        , zeroOne : Maybe Stack
-        , oneZero : Maybe Stack
-        , oneOne : Maybe Stack
+        { zeroZero : Stack
+        , zeroOne : Stack
+        , oneZero : Stack
+        , oneOne : Stack
         }
     | TwoByThree
-        { zeroZero : Maybe Stack
-        , zeroOne : Maybe Stack
-        , zeroTwo : Maybe Stack
-        , oneZero : Maybe Stack
-        , oneOne : Maybe Stack
-        , oneTwo : Maybe Stack
+        { zeroZero : Stack
+        , zeroOne : Stack
+        , zeroTwo : Stack
+        , oneZero : Stack
+        , oneOne : Stack
+        , oneTwo : Stack
         }
     | ThreeByThree
-        { zeroZero : Maybe Stack
-        , zeroOne : Maybe Stack
-        , zeroTwo : Maybe Stack
-        , oneZero : Maybe Stack
-        , oneOne : Maybe Stack
-        , oneTwo : Maybe Stack
-        , twoOne : Maybe Stack
-        , twoZero : Maybe Stack
-        , twoTwo : Maybe Stack
+        { zeroZero : Stack
+        , zeroOne : Stack
+        , zeroTwo : Stack
+        , oneZero : Stack
+        , oneOne : Stack
+        , oneTwo : Stack
+        , twoOne : Stack
+        , twoZero : Stack
+        , twoTwo : Stack
         }
 
 

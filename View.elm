@@ -24,15 +24,15 @@ view model =
             ]
             [ text "test Button" ]
         , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ Model.threeByThree (Just <| Single Pawn)
-                (Just <| Single Drone)
-                (Just <| Single Queen)
-                (Just <| Single Pawn)
-                (Just <| Single Drone)
-                (Just <| Single Queen)
-                (Just <| FullTree)
-                (Just <| EmptyStack)
-                (Just <| FullNest)
+            [ Model.threeByThree (Single Pawn)
+                (Single Drone)
+                (Single Queen)
+                (Single Pawn)
+                (Single Drone)
+                (Single Queen)
+                FullTree
+                EmptyStack
+                FullNest
                 |> renderBoard
             ]
         ]
@@ -62,7 +62,7 @@ renderBoard board =
 
         OneByOne stack ->
             g []
-                <| spaceAndStack (Just stack) atCenter
+                <| spaceAndStack stack atCenter
 
         OneByTwo stack0 stack1 ->
             g []
@@ -117,20 +117,19 @@ tupleAdd ( x, y ) ( xOffset, yOffset ) =
 
 
 type alias StackDisplayer =
-    --TODO: Stack -> ( Float, Float ) -> List (Svg Msg)
-    Maybe Stack -> ( Float, Float ) -> List (Svg Msg)
+    Stack -> ( Float, Float ) -> List (Svg Msg)
 
 
 spaceAndStack : StackDisplayer
 spaceAndStack maybeStack ( x, y ) =
     case maybeStack of
-        Just stack ->
+        EmptyStack ->
+            [ space x y ]
+
+        stack ->
             [ space x y
             , renderStack stack x y
             ]
-
-        Nothing ->
-            [ space x y ]
 
 
 nullSvg =
