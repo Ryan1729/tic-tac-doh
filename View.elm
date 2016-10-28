@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Model exposing (Model, Size(..), Stack(..), Board(..))
+import Model exposing (Model, Size(..), Stack(..), Board(..), Stash)
 import Html exposing (Html, text)
 import Msg exposing (Msg(..))
 import Material.Button as Button
@@ -12,28 +12,23 @@ import Svg.Events exposing (onClick)
 view : Model -> Html Msg
 view model =
     Html.div []
-        [ model
-            |> toString
-            |> text
-        , Button.render Mdl
+        [ Button.render Mdl
             [ 0 ]
             model.mdl
             [ Button.raised
             , Button.ripple
             , Button.onClick NoOp
             ]
-            [ text "test Button" ]
-        , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ Model.threeByThree (Single Pawn)
-                (Single Drone)
-                (Single Queen)
-                (Single Pawn)
-                (Single Drone)
-                (Single Queen)
-                FullTree
-                EmptyStack
-                FullNest
-                |> renderBoard model.selected
+            [ text "New Game" ]
+        , svg
+            [ width stashWidthString
+            , height stashHeightString
+            , viewBox ("0 0 " ++ stashWidthString ++ " " ++ stashHeightString)
+            ]
+            [ renderStash model.stash
+            ]
+        , svg [ width boardWidthString, height boardHeightString, viewBox "0 0 600 600" ]
+            [ renderBoard model.selected model.board
             ]
         ]
 
@@ -42,8 +37,76 @@ boardWidth =
     600
 
 
+boardWidthString =
+    toString boardWidth
+
+
 boardHeight =
     600
+
+
+boardHeightString =
+    toString boardHeight
+
+
+stashWidth =
+    boardWidth
+
+
+stashHeight =
+    pawnStahHeight + stashSpacing
+
+
+stashWidthString =
+    toString stashWidth
+
+
+stashHeightString =
+    toString stashHeight
+
+
+renderStash : Stash -> Svg Msg
+renderStash stash =
+    g []
+        <| [ Svg.rect
+                [ x "0"
+                , y "0"
+                , width boardWidthString
+                , height stashHeightString
+                , stroke "black"
+                , strokeWidth "2"
+                , fillOpacity "0"
+                ]
+                []
+           ]
+        ++ List.indexedMap (renderStashPiece queenStahHeight) (List.repeat stash.queen Queen)
+        ++ List.indexedMap (renderStashPiece droneStahHeight) (List.repeat stash.drone Drone)
+        ++ List.indexedMap (renderStashPiece pawnStahHeight) (List.repeat stash.pawn Pawn)
+
+
+queenStahHeight =
+    stashSpacing + pyramidHeightConstant * getScale Queen
+
+
+droneStahHeight =
+    queenStahHeight + stashSpacing + pyramidHeightConstant * getScale Drone
+
+
+pawnStahHeight =
+    droneStahHeight + stashSpacing + pyramidHeightConstant * getScale Pawn
+
+
+stashSpacing =
+    5
+
+
+renderStashPiece : Float -> Int -> Size -> Svg Msg
+renderStashPiece y index size =
+    let
+        x =
+            (toFloat index * stashWidth / 5) + (getScale Queen + stashSpacing)
+    in
+        pyramid size x y
 
 
 centerX =
@@ -523,11 +586,11 @@ pyramidPathSuffix scale =
             ++ (" l -" ++ sclaeString ++ " " ++ doubleSclaeString)
             ++ (" l " ++ sclaeString ++ " " ++ sclaeString)
             ++ " Z "
-            ++ (" l 0 " ++ toString (-3 * scale))
+            ++ (" l 0 " ++ toString (-pyramidHeightConstant * scale))
 
 
-
--- ++ (" l 0 " ++ toString (3 * scale))
+pyramidHeightConstant =
+    3
 
 
 pyramid : Size -> Float -> Float -> Svg Msg

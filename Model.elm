@@ -6,12 +6,16 @@ import Material
 type alias Model =
     { mdl : Material.Model
     , selected : Maybe Size
+    , board : Board
+    , stash : Stash
     }
 
 
 defaultState =
     { mdl = Material.model
     , selected = Just Pawn
+    , board = EmptyBoard
+    , stash = defaultStash
     }
 
 
@@ -19,6 +23,17 @@ type Size
     = Queen
     | Drone
     | Pawn
+
+
+type alias Stash =
+    { queen : Int
+    , drone : Int
+    , pawn : Int
+    }
+
+
+defaultStash =
+    Stash 5 5 5
 
 
 type Stack
