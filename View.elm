@@ -33,7 +33,7 @@ view model =
                 FullTree
                 EmptyStack
                 FullNest
-                |> renderBoard
+                |> renderBoard model.selected
             ]
         ]
 
@@ -54,54 +54,55 @@ centerY =
     boardHeight / 2
 
 
-renderBoard : Board -> Svg Msg
-renderBoard board =
+renderBoard : Maybe Size -> Board -> Svg Msg
+renderBoard selected board =
     case board of
         EmptyBoard ->
-            space centerX centerY
+            g []
+                <| spaceAndStack selected EmptyStack atCenter
 
         OneByOne stack ->
             g []
-                <| spaceAndStack stack atCenter
+                <| spaceAndStack selected stack atCenter
 
         OneByTwo stack0 stack1 ->
             g []
-                <| spaceAndStack stack0 (fromCenter -halfSpaceOffset -halfSpaceOffset)
-                ++ spaceAndStack stack1 (fromCenter halfSpaceOffset halfSpaceOffset)
+                <| spaceAndStack selected stack0 (fromCenter -halfSpaceOffset -halfSpaceOffset)
+                ++ spaceAndStack selected stack1 (fromCenter halfSpaceOffset halfSpaceOffset)
 
         OneByThree stack0 stack1 stack2 ->
             g []
-                <| spaceAndStack stack0 (fromCenter -spaceOffset -spaceOffset)
-                ++ spaceAndStack stack1 atCenter
-                ++ spaceAndStack stack2 (fromCenter spaceOffset spaceOffset)
+                <| spaceAndStack selected stack0 (fromCenter -spaceOffset -spaceOffset)
+                ++ spaceAndStack selected stack1 atCenter
+                ++ spaceAndStack selected stack2 (fromCenter spaceOffset spaceOffset)
 
         TwoByTwo spaces ->
             g []
-                <| spaceAndStack spaces.zeroZero atCenter
-                ++ spaceAndStack spaces.zeroOne (fromCenter spaceOffset spaceOffset)
-                ++ spaceAndStack spaces.oneZero (fromCenter -spaceOffset spaceOffset)
-                ++ spaceAndStack spaces.oneOne (fromCenter 0 doubleSpaceOffset)
+                <| spaceAndStack selected spaces.zeroZero atCenter
+                ++ spaceAndStack selected spaces.zeroOne (fromCenter spaceOffset spaceOffset)
+                ++ spaceAndStack selected spaces.oneZero (fromCenter -spaceOffset spaceOffset)
+                ++ spaceAndStack selected spaces.oneOne (fromCenter 0 doubleSpaceOffset)
 
         TwoByThree spaces ->
             g []
-                <| spaceAndStack spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
-                ++ spaceAndStack spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
-                ++ spaceAndStack spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
-                ++ spaceAndStack spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
-                ++ spaceAndStack spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
-                ++ spaceAndStack spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
+                <| spaceAndStack selected spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
+                ++ spaceAndStack selected spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
+                ++ spaceAndStack selected spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
+                ++ spaceAndStack selected spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
+                ++ spaceAndStack selected spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
+                ++ spaceAndStack selected spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
 
         ThreeByThree spaces ->
             g []
-                <| spaceAndStack spaces.zeroZero (fromCenter 0 -spaceOffset)
-                ++ spaceAndStack spaces.zeroOne (fromCenter spaceOffset 0)
-                ++ spaceAndStack spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
-                ++ spaceAndStack spaces.oneZero (fromCenter -spaceOffset 0)
-                ++ spaceAndStack spaces.oneOne (fromCenter 0 spaceOffset)
-                ++ spaceAndStack spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
-                ++ spaceAndStack spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
-                ++ spaceAndStack spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
-                ++ spaceAndStack spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
+                <| spaceAndStack selected spaces.zeroZero (fromCenter 0 -spaceOffset)
+                ++ spaceAndStack selected spaces.zeroOne (fromCenter spaceOffset 0)
+                ++ spaceAndStack selected spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
+                ++ spaceAndStack selected spaces.oneZero (fromCenter -spaceOffset 0)
+                ++ spaceAndStack selected spaces.oneOne (fromCenter 0 spaceOffset)
+                ++ spaceAndStack selected spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
+                ++ spaceAndStack selected spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
+                ++ spaceAndStack selected spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
+                ++ spaceAndStack selected spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
 
 
 atCenter =
@@ -116,19 +117,85 @@ tupleAdd ( x, y ) ( xOffset, yOffset ) =
     ( x + xOffset, y + yOffset )
 
 
-type alias StackDisplayer =
-    Stack -> ( Float, Float ) -> List (Svg Msg)
+spaceAndStack : Maybe Size -> Stack -> ( Float, Float ) -> List (Svg Msg)
+spaceAndStack selected stack ( x, y ) =
+    [ spaceMsg selected stack
+        |> space x y
+    , renderStack stack x y
+    ]
 
 
-spaceAndStack : StackDisplayer
-spaceAndStack maybeStack ( x, y ) =
-    case maybeStack of
+spaceMsg : Maybe Size -> Stack -> Maybe Msg
+spaceMsg selected stack =
+    case selected of
+        Just size ->
+            if sizeFits size stack then
+                Just Place
+            else
+                Nothing
+
+        Nothing ->
+            Nothing
+
+
+sizeFits : Size -> Stack -> Bool
+sizeFits size stack =
+    case stack of
         EmptyStack ->
-            [ space x y ]
+            True
 
-        stack ->
-            [ space x y
-            , renderStack stack x y
+        Single stackSize ->
+            size /= stackSize
+
+        PartialTree ->
+            size == Pawn
+
+        PartialNest ->
+            size == Queen
+
+        FullTree ->
+            False
+
+        DroneTree ->
+            False
+
+        NoDroneTree ->
+            False
+
+        DroneNest ->
+            False
+
+        FullNest ->
+            False
+
+        NoDroneNest ->
+            False
+
+
+space : Float -> Float -> Maybe Msg -> Svg Msg
+space x y maybeMsg =
+    let
+        dString =
+            ("M " ++ toString x ++ " " ++ toString y)
+                ++ spaceSuffix
+
+        msgAttributes =
+            case maybeMsg of
+                Just msg ->
+                    [ stroke "white", onClick msg ]
+
+                Nothing ->
+                    [ stroke "black" ]
+    in
+        g []
+            [ Svg.path
+                (msgAttributes
+                    ++ [ d dString
+                       , fill "#444444"
+                       , strokeWidth "4"
+                       ]
+                )
+                []
             ]
 
 
@@ -182,24 +249,6 @@ spaceSuffix =
         ++ (" l " ++ minusSpaceOffsetString ++ " " ++ minusSpaceOffsetString)
         ++ (" l " ++ minusSpaceOffsetString ++ " " ++ spaceOffsetString)
         ++ (" l " ++ spaceOffsetString ++ " " ++ spaceOffsetString)
-
-
-space : Float -> Float -> Svg Msg
-space x y =
-    let
-        dString =
-            ("M " ++ toString x ++ " " ++ toString y)
-                ++ spaceSuffix
-    in
-        g []
-            [ Svg.path
-                [ d dString
-                , stroke "black"
-                , fill "#444444"
-                , strokeWidth "4"
-                ]
-                []
-            ]
 
 
 renderStack : Stack -> Float -> Float -> Svg Msg

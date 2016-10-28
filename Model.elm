@@ -4,11 +4,15 @@ import Material
 
 
 type alias Model =
-    { mdl : Material.Model }
+    { mdl : Material.Model
+    , selected : Maybe Size
+    }
 
 
 defaultState =
-    { mdl = Material.model }
+    { mdl = Material.model
+    , selected = Just Pawn
+    }
 
 
 type Size

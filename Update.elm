@@ -11,5 +11,8 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
+        Place ->
+            ( model, Debug.log "TODO" Cmd.none )
+
         Mdl msg' ->
             Material.update msg' model
