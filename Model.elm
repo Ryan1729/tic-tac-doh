@@ -18,7 +18,8 @@ type Size
 
 
 type Stack
-    = Single Size
+    = EmptyStack
+    | Single Size
     | FullTree
     | PartialTree
     | DroneTree

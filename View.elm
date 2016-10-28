@@ -24,24 +24,16 @@ view model =
             ]
             [ text "test Button" ]
         , svg [ width "600", height "600", viewBox "0 0 600 600" ]
-            [ Model.twoByThree (Just <| Single Pawn)
+            [ Model.threeByThree (Just <| Single Pawn)
                 (Just <| Single Drone)
                 (Just <| Single Queen)
                 (Just <| Single Pawn)
                 (Just <| Single Drone)
                 (Just <| Single Queen)
+                (Just <| FullTree)
+                (Just <| EmptyStack)
+                (Just <| FullNest)
                 |> renderBoard
-              -- , ThreeByThree
-              --     { zeroZero : Maybe Stack
-              --     , zeroOne : Maybe Stack
-              --     , zeroTwo : Maybe Stack
-              --     , oneZero : Maybe Stack
-              --     , oneOne : Maybe Stack
-              --     , oneTwo : Maybe Stack
-              --     , twoOne : Maybe Stack
-              --     , twoZero : Maybe Stack
-              --     , twoTwo : Maybe Stack
-              --     }
             ]
         ]
 
@@ -88,7 +80,7 @@ renderBoard board =
                 <| spaceAndStack spaces.zeroZero atCenter
                 ++ spaceAndStack spaces.zeroOne (fromCenter spaceOffset spaceOffset)
                 ++ spaceAndStack spaces.oneZero (fromCenter -spaceOffset spaceOffset)
-                ++ spaceAndStack spaces.oneOne (fromCenter 0 (2 * spaceOffset))
+                ++ spaceAndStack spaces.oneOne (fromCenter 0 doubleSpaceOffset)
 
         TwoByThree spaces ->
             g []
@@ -96,12 +88,20 @@ renderBoard board =
                 ++ spaceAndStack spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
                 ++ spaceAndStack spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
                 ++ spaceAndStack spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
-                ++ spaceAndStack spaces.oneOne (fromCenter -halfSpaceOffset (threeHalfsSpaceOffset))
+                ++ spaceAndStack spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
                 ++ spaceAndStack spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
 
-        _ ->
-            -- ThreeByThree spaces ->
-            space centerX centerY
+        ThreeByThree spaces ->
+            g []
+                <| spaceAndStack spaces.zeroZero (fromCenter 0 -spaceOffset)
+                ++ spaceAndStack spaces.zeroOne (fromCenter spaceOffset 0)
+                ++ spaceAndStack spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
+                ++ spaceAndStack spaces.oneZero (fromCenter -spaceOffset 0)
+                ++ spaceAndStack spaces.oneOne (fromCenter 0 spaceOffset)
+                ++ spaceAndStack spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
+                ++ spaceAndStack spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
+                ++ spaceAndStack spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
+                ++ spaceAndStack spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
 
 
 atCenter =
@@ -116,6 +116,12 @@ tupleAdd ( x, y ) ( xOffset, yOffset ) =
     ( x + xOffset, y + yOffset )
 
 
+type alias StackDisplayer =
+    --TODO: Stack -> ( Float, Float ) -> List (Svg Msg)
+    Maybe Stack -> ( Float, Float ) -> List (Svg Msg)
+
+
+spaceAndStack : StackDisplayer
 spaceAndStack maybeStack ( x, y ) =
     case maybeStack of
         Just stack ->
@@ -163,6 +169,10 @@ threeHalfsSpaceOffset =
     halfSpaceOffset * 3
 
 
+doubleSpaceOffset =
+    spaceOffset * 2
+
+
 minusSpaceOffsetString =
     toString -spaceOffset
 
@@ -196,6 +206,9 @@ space x y =
 renderStack : Stack -> Float -> Float -> Svg Msg
 renderStack stack x y =
     case stack of
+        EmptyStack ->
+            nullSvg
+
         Single size ->
             pyramid size x y
 
