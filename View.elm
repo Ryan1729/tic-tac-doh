@@ -227,8 +227,13 @@ halfSpaceOffset =
     spaceOffset / 2
 
 
-spaceOffsetString =
-    toString spaceOffset
+suffixSpaceOffset =
+    --make room for the ourlines
+    spaceOffset - 2.5
+
+
+suffixSpaceOffsetString =
+    toString suffixSpaceOffset
 
 
 threeHalfsSpaceOffset =
@@ -239,16 +244,16 @@ doubleSpaceOffset =
     spaceOffset * 2
 
 
-minusSpaceOffsetString =
-    toString -spaceOffset
+minusSuffixSpaceOffsetString =
+    toString -suffixSpaceOffset
 
 
 spaceSuffix =
     (" m 0 " ++ toString (queenScale / 2))
-        ++ (" l " ++ spaceOffsetString ++ " " ++ minusSpaceOffsetString)
-        ++ (" l " ++ minusSpaceOffsetString ++ " " ++ minusSpaceOffsetString)
-        ++ (" l " ++ minusSpaceOffsetString ++ " " ++ spaceOffsetString)
-        ++ (" l " ++ spaceOffsetString ++ " " ++ spaceOffsetString)
+        ++ (" l " ++ suffixSpaceOffsetString ++ " " ++ minusSuffixSpaceOffsetString)
+        ++ (" l " ++ minusSuffixSpaceOffsetString ++ " " ++ minusSuffixSpaceOffsetString)
+        ++ (" l " ++ minusSuffixSpaceOffsetString ++ " " ++ suffixSpaceOffsetString)
+        ++ "Z"
 
 
 renderStack : Stack -> Float -> Float -> Svg Msg
@@ -517,7 +522,12 @@ pyramidPathSuffix scale =
             ++ ("l -" ++ sclaeString ++ " -" ++ doubleSclaeString)
             ++ (" l -" ++ sclaeString ++ " " ++ doubleSclaeString)
             ++ (" l " ++ sclaeString ++ " " ++ sclaeString)
+            ++ " Z "
             ++ (" l 0 " ++ toString (-3 * scale))
+
+
+
+-- ++ (" l 0 " ++ toString (3 * scale))
 
 
 pyramid : Size -> Float -> Float -> Svg Msg
