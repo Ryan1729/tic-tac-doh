@@ -60,10 +60,10 @@ renderStashStack selected x amount size =
                     if size == selectedSize then
                         highlightedPyramid
                     else
-                        plainPyramid
+                        clickablePyramid (Just size |> Select)
 
                 Nothing ->
-                    plainPyramid
+                    clickablePyramid (Just size |> Select)
     in
         getHeights amount size
             |> List.reverse
@@ -361,6 +361,11 @@ pyramidPathSuffix scale =
 
 pyramidHeightConstant =
     3
+
+
+clickablePyramid : Msg -> Size -> Float -> Float -> Svg Msg
+clickablePyramid msg =
+    pyramid [ onClick msg, stroke "grey" ]
 
 
 highlightedPyramid =

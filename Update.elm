@@ -11,6 +11,9 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
+        Select selected ->
+            ( { model | selected = selected }, Cmd.none )
+
         Place ->
             ( model, Debug.log "TODO" Cmd.none )
 
