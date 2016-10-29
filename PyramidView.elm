@@ -28,8 +28,8 @@ stashHeightString =
     toString stashHeight
 
 
-renderStash : Stash -> Html Msg
-renderStash stash =
+renderStash : Maybe Size -> Stash -> Html Msg
+renderStash selected stash =
     svg
         [ width stashWidthString
         , height stashHeightString
@@ -46,19 +46,31 @@ renderStash stash =
                 ]
                 []
            ]
-        ++ renderStashStack (stashWidth * 1 / 6) stash.queen Queen
-        ++ renderStashStack (stashWidth * 3 / 6) stash.drone Drone
-        ++ renderStashStack (stashWidth * 5 / 6) stash.pawn Pawn
+        ++ renderStashStack selected (stashWidth * 1 / 6) stash.queen Queen
+        ++ renderStashStack selected (stashWidth * 3 / 6) stash.drone Drone
+        ++ renderStashStack selected (stashWidth * 5 / 6) stash.pawn Pawn
 
 
-renderStashStack : Float -> Int -> Size -> List (Svg Msg)
-renderStashStack x amount size =
-    getHeights amount size
-        |> List.reverse
-        |> List.tail
-        |> Maybe.withDefault []
-        |> List.reverse
-        |> List.map (pyramid size x)
+renderStashStack : Maybe Size -> Float -> Int -> Size -> List (Svg Msg)
+renderStashStack selected x amount size =
+    let
+        pyramidView =
+            case selected of
+                Just selectedSize ->
+                    if size == selectedSize then
+                        highlightedPyramid
+                    else
+                        plainPyramid
+
+                Nothing ->
+                    plainPyramid
+    in
+        getHeights amount size
+            |> List.reverse
+            |> List.tail
+            |> Maybe.withDefault []
+            |> List.reverse
+            |> List.map (pyramidView size x)
 
 
 getHeights : Int -> Size -> List Float
@@ -78,57 +90,56 @@ renderStack stack x y =
             nullSvg
 
         Single size ->
-            pyramid size x y
+            plainPyramid size x y
 
         FullTree ->
             g []
-                [ pyramid Queen x y
-                , pyramid Drone x (above Drone Queen y)
-                , pyramid Pawn x (above Pawn Drone (above Drone Queen y))
+                [ plainPyramid Queen x y
+                , plainPyramid Drone x (above Drone Queen y)
+                , plainPyramid Pawn x (above Pawn Drone (above Drone Queen y))
                 ]
 
         PartialTree ->
             g []
-                [ pyramid Queen x y
-                , pyramid Drone x (above Drone Queen y)
+                [ plainPyramid Queen x y
+                , plainPyramid Drone x (above Drone Queen y)
                 ]
 
         DroneTree ->
             g []
-                [ pyramid Drone x y
-                , pyramid Pawn x (above Pawn Drone y)
+                [ plainPyramid Drone x y
+                , plainPyramid Pawn x (above Pawn Drone y)
                 ]
 
         NoDroneTree ->
             g []
-                [ pyramid Queen x y
-                , pyramid Pawn x (above Pawn Queen y)
+                [ plainPyramid Queen x y
+                , plainPyramid Pawn x (above Pawn Queen y)
                 ]
 
         FullNest ->
             g []
-                [ pyramid Pawn x (below Pawn Drone (below Drone Queen y))
-                , pyramid Drone x (below Drone Queen y)
-                , pyramid Queen x y
+                [ plainPyramid Pawn x (below Pawn Drone (below Drone Queen y))
+                , plainPyramid Drone x (below Drone Queen y)
+                , plainPyramid Queen x y
                 ]
 
         PartialNest ->
             g []
-                [ pyramid Pawn x (below Pawn Drone y)
-                , pyramid Drone x y
+                [ plainPyramid Pawn x (below Pawn Drone y)
+                , plainPyramid Drone x y
                 ]
 
         DroneNest ->
             g []
-                [ pyramid Drone x (below Drone Queen y)
-                , pyramid Queen x y
+                [ plainPyramid Drone x (below Drone Queen y)
+                , plainPyramid Queen x y
                 ]
 
         NoDroneNest ->
             g []
-                [ --special case
-                  pyramid Pawn x (below Pawn Queen y)
-                , pyramid Queen x y
+                [ plainPyramid Pawn x (below Pawn Queen y)
+                , plainPyramid Queen x y
                 ]
 
 
@@ -352,8 +363,16 @@ pyramidHeightConstant =
     3
 
 
-pyramid : Size -> Float -> Float -> Svg Msg
-pyramid size x y =
+highlightedPyramid =
+    pyramid [ stroke "white" ]
+
+
+plainPyramid =
+    pyramid [ stroke "grey" ]
+
+
+pyramid : List (Attribute Msg) -> Size -> Float -> Float -> Svg Msg
+pyramid attributes size x y =
     let
         dString =
             "M "
@@ -371,11 +390,12 @@ pyramid size x y =
                         pawnPyramidPathSuffix
     in
         [ Svg.path
-            [ d dString
-            , stroke "grey"
-            , strokeWidth "2"
-            , fillOpacity "0.4"
-            ]
+            ([ d dString
+             , strokeWidth "2"
+             , fillOpacity "0.4"
+             ]
+                ++ attributes
+            )
             []
         ]
             ++ getDots size x y

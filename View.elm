@@ -27,7 +27,7 @@ view model =
             ]
         , Grid.grid []
             [ Grid.cell [ Grid.size All 6 ]
-                [ renderStash model.stash
+                [ renderStash model.selected model.stash
                 ]
             , Grid.cell [ Grid.size All 6 ]
                 [ svg
