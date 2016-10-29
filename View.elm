@@ -142,7 +142,8 @@ spaceMsg selected stack =
     case selected of
         Just size ->
             if Model.sizeFits size stack then
-                Just Place
+                --TODO pass boardId down
+                Just (Place Model.ZeroZero)
             else
                 Nothing
 
