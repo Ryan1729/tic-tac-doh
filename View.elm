@@ -2,8 +2,10 @@ module View exposing (view)
 
 import Model exposing (Model, Size(..), Stack(..), Board(..), Stash)
 import Html exposing (Html, text)
+import Html.Attributes
 import Msg exposing (Msg(..))
 import Material.Button as Button
+import Material.Grid as Grid exposing (Device(..))
 import Svg exposing (Svg, svg, polygon, Attribute, ellipse, g)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
@@ -12,23 +14,35 @@ import Svg.Events exposing (onClick)
 view : Model -> Html Msg
 view model =
     Html.div []
-        [ Button.render Mdl
-            [ 0 ]
-            model.mdl
-            [ Button.raised
-            , Button.ripple
-            , Button.onClick NoOp
+        [ Html.div [ Html.Attributes.style [ ( "display", "flex" ), ( "justify-content", "center" ) ] ]
+            [ Button.render Mdl
+                [ 0 ]
+                model.mdl
+                [ Button.raised
+                , Button.ripple
+                , Button.onClick NoOp
+                ]
+                [ text "New Game" ]
             ]
-            [ text "New Game" ]
-        , svg
-            [ width stashWidthString
-            , height stashHeightString
-            , viewBox ("0 0 " ++ stashWidthString ++ " " ++ stashHeightString)
-            ]
-            [ renderStash model.stash
-            ]
-        , svg [ width boardWidthString, height boardHeightString, viewBox "0 0 600 600" ]
-            [ renderBoard model.selected model.board
+        , Grid.grid []
+            [ Grid.cell [ Grid.size All 6 ]
+                [ svg
+                    [ width stashWidthString
+                    , height stashHeightString
+                    , viewBox ("0 0 " ++ stashWidthString ++ " " ++ stashHeightString)
+                    ]
+                    [ renderStash model.stash
+                    ]
+                ]
+            , Grid.cell [ Grid.size All 6 ]
+                [ svg
+                    [ width boardWidthString
+                    , height boardHeightString
+                    , viewBox ("0 0 " ++ boardWidthString ++ " " ++ boardHeightString)
+                    ]
+                    [ renderBoard model.selected model.board
+                    ]
+                ]
             ]
         ]
 
