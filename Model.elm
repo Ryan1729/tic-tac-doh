@@ -114,7 +114,7 @@ twoByThree zeroZero zeroOne zeroTwo oneZero oneOne oneTwo =
         }
 
 
-threeByThree zeroZero zeroOne zeroTwo oneZero oneOne oneTwo twoOne twoZero twoTwo =
+threeByThree zeroZero zeroOne zeroTwo oneZero oneOne oneTwo twoZero twoOne twoTwo =
     ThreeByThree
         { zeroZero = zeroZero
         , zeroOne = zeroOne
@@ -122,8 +122,8 @@ threeByThree zeroZero zeroOne zeroTwo oneZero oneOne oneTwo twoOne twoZero twoTw
         , oneZero = oneZero
         , oneOne = oneOne
         , oneTwo = oneTwo
-        , twoOne = twoOne
         , twoZero = twoZero
+        , twoOne = twoOne
         , twoTwo = twoTwo
         }
 sizeFits : Size -> Stack -> Bool
