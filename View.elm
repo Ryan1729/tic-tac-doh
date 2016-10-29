@@ -141,47 +141,13 @@ spaceMsg : Maybe Size -> Stack -> Maybe Msg
 spaceMsg selected stack =
     case selected of
         Just size ->
-            if sizeFits size stack then
+            if Model.sizeFits size stack then
                 Just Place
             else
                 Nothing
 
         Nothing ->
             Nothing
-
-
-sizeFits : Size -> Stack -> Bool
-sizeFits size stack =
-    case stack of
-        EmptyStack ->
-            True
-
-        Single stackSize ->
-            size /= stackSize
-
-        PartialTree ->
-            size == Pawn
-
-        PartialNest ->
-            size == Queen
-
-        FullTree ->
-            False
-
-        DroneTree ->
-            False
-
-        NoDroneTree ->
-            False
-
-        DroneNest ->
-            False
-
-        FullNest ->
-            False
-
-        NoDroneNest ->
-            False
 
 
 space : Float -> Float -> Maybe Msg -> Svg Msg

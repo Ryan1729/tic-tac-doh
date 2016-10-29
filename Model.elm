@@ -126,3 +126,35 @@ threeByThree zeroZero zeroOne zeroTwo oneZero oneOne oneTwo twoOne twoZero twoTw
         , twoZero = twoZero
         , twoTwo = twoTwo
         }
+sizeFits : Size -> Stack -> Bool
+sizeFits size stack =
+    case stack of
+        EmptyStack ->
+            True
+
+        Single stackSize ->
+            size /= stackSize
+
+        PartialTree ->
+            size == Pawn
+
+        PartialNest ->
+            size == Queen
+
+        FullTree ->
+            False
+
+        DroneTree ->
+            False
+
+        NoDroneTree ->
+            False
+
+        DroneNest ->
+            False
+
+        FullNest ->
+            False
+
+        NoDroneNest ->
+            False
