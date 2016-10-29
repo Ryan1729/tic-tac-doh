@@ -365,69 +365,73 @@ renderStack stack x y =
         FullTree ->
             g []
                 [ pyramid Queen x y
-                , pyramid Drone x (above Queen Drone y)
-                , pyramid Pawn x (above Drone Pawn (above Queen Drone y))
+                , pyramid Drone x (above Drone Queen y)
+                , pyramid Pawn x (above Pawn Drone (above Drone Queen y))
                 ]
 
         PartialTree ->
             g []
                 [ pyramid Queen x y
-                , pyramid Drone x (above Queen Drone y)
+                , pyramid Drone x (above Drone Queen y)
                 ]
 
         DroneTree ->
             g []
                 [ pyramid Drone x y
-                , pyramid Pawn x (above Drone Pawn y)
+                , pyramid Pawn x (above Pawn Drone y)
                 ]
 
         NoDroneTree ->
             g []
                 [ pyramid Queen x y
-                , pyramid Pawn x (above Queen Pawn y)
+                , pyramid Pawn x (above Pawn Queen y)
                 ]
 
         FullNest ->
             g []
-                [ pyramid Pawn x (below Drone (below Queen y))
-                , pyramid Drone x (below Queen y)
+                [ pyramid Pawn x (below Pawn Drone (below Drone Queen y))
+                , pyramid Drone x (below Drone Queen y)
                 , pyramid Queen x y
                 ]
 
         PartialNest ->
             g []
-                [ pyramid Pawn x (below Drone (below Queen y))
-                , pyramid Drone x (below Queen y)
+                [ pyramid Pawn x (below Pawn Drone y)
+                , pyramid Drone x y
                 ]
 
         DroneNest ->
             g []
-                [ pyramid Drone x (below Queen y)
+                [ pyramid Drone x (below Drone Queen y)
                 , pyramid Queen x y
                 ]
 
         NoDroneNest ->
             g []
                 [ --special case
-                  pyramid Pawn x (below Queen (below Queen y))
+                  pyramid Pawn x (below Pawn Queen y)
                 , pyramid Queen x y
                 ]
 
 
+below lowerSize upperSize y =
+    if lowerSize == upperSize then
+        y
+    else
+        case ( lowerSize, upperSize ) of
+            ( Pawn, Queen ) ->
+                y - (getScale upperSize * 2 / 5)
 
---size of thing placed above this
+            _ ->
+                y - (getScale upperSize * 1 / 5)
 
 
-below size y =
-    y - (getScale size * 1 / 5)
-
-
-above lowerSize upperSize y =
+above upperSize lowerSize y =
     if lowerSize == upperSize then
         y - (getScale upperSize * 4 / 5)
     else
-        case ( lowerSize, upperSize ) of
-            ( Queen, Pawn ) ->
+        case ( upperSize, lowerSize ) of
+            ( Pawn, Queen ) ->
                 y - (getScale Pawn * 14 / 5)
 
             _ ->
