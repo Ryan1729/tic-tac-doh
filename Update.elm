@@ -14,8 +14,13 @@ update msg model =
         Select selected ->
             ( { model | selected = selected }, Cmd.none )
 
-        Place ->
-            ( model, Debug.log "TODO" Cmd.none )
+        Place boardId ->
+            case model.selected of
+                Just size ->
+                    ( { model | board = Model.place boardId size model.board }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
 
         Mdl msg' ->
             Material.update msg' model
