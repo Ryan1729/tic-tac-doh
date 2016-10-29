@@ -14,7 +14,16 @@ type alias Model =
 defaultState =
     { mdl = Material.model
     , selected = Just Pawn
-    , board = EmptyBoard
+    , board =
+        threeByThree FullTree
+            PartialTree
+            DroneTree
+            NoDroneTree
+            FullNest
+            PartialNest
+            DroneNest
+            NoDroneNest
+            (Single Pawn)
     , stash = defaultStash
     }
 
@@ -32,8 +41,12 @@ type alias Stash =
     }
 
 
+maxStashAmount =
+    5
+
+
 defaultStash =
-    Stash 5 5 5
+    Stash maxStashAmount maxStashAmount maxStashAmount
 
 
 type Stack

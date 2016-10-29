@@ -68,7 +68,11 @@ stashWidth =
 
 
 stashHeight =
-    pawnStahHeight + stashSpacing
+    above Queen Queen 0
+        |> abs
+        |> (*) (Model.maxStashAmount - 1)
+        |> (+) (pyramidHeightConstant * getScale Queen)
+        |> (+) (2 * stashSpacing)
 
 
 stashWidthString =
@@ -93,21 +97,37 @@ renderStash stash =
                 ]
                 []
            ]
-        ++ List.indexedMap (renderStashPiece queenStahHeight) (List.repeat stash.queen Queen)
-        ++ List.indexedMap (renderStashPiece droneStahHeight) (List.repeat stash.drone Drone)
-        ++ List.indexedMap (renderStashPiece pawnStahHeight) (List.repeat stash.pawn Pawn)
+        ++ stashStack (stashWidth * 1 / 6) stash.queen Queen
+        ++ stashStack (stashWidth * 3 / 6) stash.drone Drone
+        ++ stashStack (stashWidth * 5 / 6) stash.pawn Pawn
 
 
-queenStahHeight =
+stashStack : Float -> Int -> Size -> List (Svg Msg)
+stashStack x amount size =
+    getHeights amount size
+        |> List.reverse
+        |> List.tail
+        |> Maybe.withDefault []
+        |> List.reverse
+        |> List.map (pyramid size x)
+
+
+getHeights : Int -> Size -> List Float
+getHeights amount size =
+    List.repeat amount size
+        |> (List.scanl (above size) (stashHeight - stashSpacing))
+
+
+queenStashWidth =
     stashSpacing + pyramidHeightConstant * getScale Queen
 
 
-droneStahHeight =
-    queenStahHeight + stashSpacing + pyramidHeightConstant * getScale Drone
+droneStashWidth =
+    queenStashWidth + stashSpacing + 2 * getScale Drone
 
 
-pawnStahHeight =
-    droneStahHeight + stashSpacing + pyramidHeightConstant * getScale Pawn
+pawnStashWidth =
+    droneStashWidth + stashSpacing + 2 * getScale Pawn
 
 
 stashSpacing =
@@ -115,9 +135,9 @@ stashSpacing =
 
 
 renderStashPiece : Float -> Int -> Size -> Svg Msg
-renderStashPiece y index size =
+renderStashPiece x index size =
     let
-        x =
+        y =
             (toFloat index * stashWidth / 5) + (getScale Queen + stashSpacing)
     in
         pyramid size x y
@@ -345,27 +365,26 @@ renderStack stack x y =
         FullTree ->
             g []
                 [ pyramid Queen x y
-                , pyramid Drone x (above Drone y)
-                , pyramid Pawn x (above Pawn (above Drone y))
+                , pyramid Drone x (above Queen Drone y)
+                , pyramid Pawn x (above Drone Pawn (above Queen Drone y))
                 ]
 
         PartialTree ->
             g []
                 [ pyramid Queen x y
-                , pyramid Drone x (above Drone y)
+                , pyramid Drone x (above Queen Drone y)
                 ]
 
         DroneTree ->
             g []
                 [ pyramid Drone x y
-                , pyramid Pawn x (above Pawn y)
+                , pyramid Pawn x (above Drone Pawn y)
                 ]
 
         NoDroneTree ->
             g []
                 [ pyramid Queen x y
-                , --special case
-                  pyramid Pawn x (above Pawn (above Pawn y))
+                , pyramid Pawn x (above Queen Pawn y)
                 ]
 
         FullNest ->
@@ -403,12 +422,16 @@ below size y =
     y - (getScale size * 1 / 5)
 
 
+above lowerSize upperSize y =
+    if lowerSize == upperSize then
+        y - (getScale upperSize * 4 / 5)
+    else
+        case ( lowerSize, upperSize ) of
+            ( Queen, Pawn ) ->
+                y - (getScale Pawn * 14 / 5)
 
---size of thing being placed above
-
-
-above size y =
-    y - (getScale size * 7 / 5)
+            _ ->
+                y - (getScale upperSize * 7 / 5)
 
 
 pawnPyramidPathSuffix =
