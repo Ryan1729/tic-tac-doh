@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Model exposing (Model, Size(..), Stack(..), Board(..), Stash)
+import Model exposing (Model, Size(..), Stack(..), Board(..), BoardId(..), Stash)
 import Html exposing (Html, text)
 import Html.Attributes
 import Msg exposing (Msg(..))
@@ -71,50 +71,50 @@ renderBoard selected board =
     case board of
         EmptyBoard ->
             g []
-                <| spaceAndStack selected EmptyStack atCenter
+                <| spaceAndStack ZeroZero selected EmptyStack atCenter
 
         OneByOne stack ->
             g []
-                <| spaceAndStack selected stack atCenter
+                <| spaceAndStack ZeroZero selected stack atCenter
 
         OneByTwo stack0 stack1 ->
             g []
-                <| spaceAndStack selected stack0 (fromCenter -halfSpaceOffset -halfSpaceOffset)
-                ++ spaceAndStack selected stack1 (fromCenter halfSpaceOffset halfSpaceOffset)
+                <| spaceAndStack ZeroZero selected stack0 (fromCenter -halfSpaceOffset -halfSpaceOffset)
+                ++ spaceAndStack ZeroOne selected stack1 (fromCenter halfSpaceOffset halfSpaceOffset)
 
         OneByThree stack0 stack1 stack2 ->
             g []
-                <| spaceAndStack selected stack0 (fromCenter -spaceOffset -spaceOffset)
-                ++ spaceAndStack selected stack1 atCenter
-                ++ spaceAndStack selected stack2 (fromCenter spaceOffset spaceOffset)
+                <| spaceAndStack ZeroZero selected stack0 (fromCenter -spaceOffset -spaceOffset)
+                ++ spaceAndStack ZeroOne selected stack1 atCenter
+                ++ spaceAndStack ZeroTwo selected stack2 (fromCenter spaceOffset spaceOffset)
 
         TwoByTwo spaces ->
             g []
-                <| spaceAndStack selected spaces.zeroZero atCenter
-                ++ spaceAndStack selected spaces.zeroOne (fromCenter spaceOffset spaceOffset)
-                ++ spaceAndStack selected spaces.oneZero (fromCenter -spaceOffset spaceOffset)
-                ++ spaceAndStack selected spaces.oneOne (fromCenter 0 doubleSpaceOffset)
+                <| spaceAndStack ZeroZero selected spaces.zeroZero atCenter
+                ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset spaceOffset)
+                ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset spaceOffset)
+                ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 doubleSpaceOffset)
 
         TwoByThree spaces ->
             g []
-                <| spaceAndStack selected spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
-                ++ spaceAndStack selected spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
-                ++ spaceAndStack selected spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
-                ++ spaceAndStack selected spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
-                ++ spaceAndStack selected spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
-                ++ spaceAndStack selected spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
+                <| spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
+                ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
+                ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
+                ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
+                ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
+                ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
 
         ThreeByThree spaces ->
             g []
-                <| spaceAndStack selected spaces.zeroZero (fromCenter 0 -spaceOffset)
-                ++ spaceAndStack selected spaces.zeroOne (fromCenter spaceOffset 0)
-                ++ spaceAndStack selected spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
-                ++ spaceAndStack selected spaces.oneZero (fromCenter -spaceOffset 0)
-                ++ spaceAndStack selected spaces.oneOne (fromCenter 0 spaceOffset)
-                ++ spaceAndStack selected spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
-                ++ spaceAndStack selected spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
-                ++ spaceAndStack selected spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
-                ++ spaceAndStack selected spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
+                <| spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter 0 -spaceOffset)
+                ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset 0)
+                ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
+                ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset 0)
+                ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 spaceOffset)
+                ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
+                ++ spaceAndStack TwoZero selected spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
+                ++ spaceAndStack TwoOne selected spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
+                ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
 
 
 atCenter =
@@ -129,21 +129,20 @@ tupleAdd ( x, y ) ( xOffset, yOffset ) =
     ( x + xOffset, y + yOffset )
 
 
-spaceAndStack : Maybe Size -> Stack -> ( Float, Float ) -> List (Svg Msg)
-spaceAndStack selected stack ( x, y ) =
-    [ spaceMsg selected stack
+spaceAndStack : BoardId -> Maybe Size -> Stack -> ( Float, Float ) -> List (Svg Msg)
+spaceAndStack boardId selected stack ( x, y ) =
+    [ spaceMsg boardId selected stack
         |> space x y
     , renderStack stack x y
     ]
 
 
-spaceMsg : Maybe Size -> Stack -> Maybe Msg
-spaceMsg selected stack =
+spaceMsg : BoardId -> Maybe Size -> Stack -> Maybe Msg
+spaceMsg boardId selected stack =
     case selected of
         Just size ->
             if Model.sizeFits size stack then
-                --TODO pass boardId down
-                Just (Place Model.ZeroZero)
+                Just (Place boardId)
             else
                 Nothing
 

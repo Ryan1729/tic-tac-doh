@@ -17,7 +17,19 @@ update msg model =
         Place boardId ->
             case model.selected of
                 Just size ->
-                    ( { model | board = Model.place boardId size model.board }, Cmd.none )
+                    let
+                        stashAmount =
+                            Model.stashGet size model.stash
+                    in
+                        if stashAmount >= 1 then
+                            ( { model
+                                | board = Model.place boardId size model.board
+                                , stash = Model.stashSet size (stashAmount - 1) model.stash
+                              }
+                            , Cmd.none
+                            )
+                        else
+                            ( model, Cmd.none )
 
                 Nothing ->
                     ( model, Cmd.none )

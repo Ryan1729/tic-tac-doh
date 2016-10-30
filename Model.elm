@@ -49,6 +49,32 @@ defaultStash =
     Stash maxStashAmount maxStashAmount maxStashAmount
 
 
+stashGet : Size -> Stash -> Int
+stashGet size stash =
+    case size of
+        Queen ->
+            stash.queen
+
+        Drone ->
+            stash.drone
+
+        Pawn ->
+            stash.pawn
+
+
+stashSet : Size -> Int -> Stash -> Stash
+stashSet size amount stash =
+    case size of
+        Queen ->
+            { stash | queen = amount }
+
+        Drone ->
+            { stash | drone = amount }
+
+        Pawn ->
+            { stash | pawn = amount }
+
+
 type Stack
     = EmptyStack
     | Single Size
@@ -142,12 +168,12 @@ type BoardId
 
 place : BoardId -> Size -> Board -> Board
 place boardId size board =
-    -- case get boardId board of
-    --     Just stack ->
-    --         set boardId (placeOnStack size stack) board
-    --
-    --     Nothing ->
-    board
+    case get boardId board of
+        Just stack ->
+            set boardId (placeOnStack size stack) board
+
+        Nothing ->
+            board
 
 
 placeOnStack : Size -> Stack -> Stack
