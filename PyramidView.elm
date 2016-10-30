@@ -90,56 +90,56 @@ renderStack stack x y =
             nullSvg
 
         Single size ->
-            plainPyramid size x y
+            placedPyramid size x y
 
         FullTree ->
             g []
-                [ plainPyramid Queen x y
-                , plainPyramid Drone x (above Drone Queen y)
-                , plainPyramid Pawn x (above Pawn Drone (above Drone Queen y))
+                [ placedPyramid Queen x y
+                , placedPyramid Drone x (above Drone Queen y)
+                , placedPyramid Pawn x (above Pawn Drone (above Drone Queen y))
                 ]
 
         PartialTree ->
             g []
-                [ plainPyramid Queen x y
-                , plainPyramid Drone x (above Drone Queen y)
+                [ placedPyramid Queen x y
+                , placedPyramid Drone x (above Drone Queen y)
                 ]
 
         DroneTree ->
             g []
-                [ plainPyramid Drone x y
-                , plainPyramid Pawn x (above Pawn Drone y)
+                [ placedPyramid Drone x y
+                , placedPyramid Pawn x (above Pawn Drone y)
                 ]
 
         NoDroneTree ->
             g []
-                [ plainPyramid Queen x y
-                , plainPyramid Pawn x (above Pawn Queen y)
+                [ placedPyramid Queen x y
+                , placedPyramid Pawn x (above Pawn Queen y)
                 ]
 
         FullNest ->
             g []
-                [ plainPyramid Pawn x (below Pawn Drone (below Drone Queen y))
-                , plainPyramid Drone x (below Drone Queen y)
-                , plainPyramid Queen x y
+                [ placedPyramid Pawn x (below Pawn Drone (below Drone Queen y))
+                , placedPyramid Drone x (below Drone Queen y)
+                , placedPyramid Queen x y
                 ]
 
         PartialNest ->
             g []
-                [ plainPyramid Pawn x (below Pawn Drone y)
-                , plainPyramid Drone x y
+                [ placedPyramid Pawn x (below Pawn Drone y)
+                , placedPyramid Drone x y
                 ]
 
         DroneNest ->
             g []
-                [ plainPyramid Drone x (below Drone Queen y)
-                , plainPyramid Queen x y
+                [ placedPyramid Drone x (below Drone Queen y)
+                , placedPyramid Queen x y
                 ]
 
         NoDroneNest ->
             g []
-                [ plainPyramid Pawn x (below Pawn Queen y)
-                , plainPyramid Queen x y
+                [ placedPyramid Pawn x (below Pawn Queen y)
+                , placedPyramid Queen x y
                 ]
 
 
@@ -372,8 +372,8 @@ highlightedPyramid =
     pyramid [ stroke "white" ]
 
 
-plainPyramid =
-    pyramid [ stroke "grey" ]
+placedPyramid =
+    pyramid [ stroke "grey", pointerEvents "none" ]
 
 
 pyramid : List (Attribute Msg) -> Size -> Float -> Float -> Svg Msg
