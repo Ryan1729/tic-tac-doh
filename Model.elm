@@ -14,16 +14,7 @@ type alias Model =
 defaultState =
     { mdl = Material.model
     , selected = Just Pawn
-    , board =
-        threeByThree FullTree
-            PartialTree
-            DroneTree
-            NoDroneTree
-            FullNest
-            PartialNest
-            DroneNest
-            NoDroneNest
-            (Single Pawn)
+    , board = EmptyBoard
     , stash = defaultStash
     }
 
@@ -222,7 +213,12 @@ get : BoardId -> Board -> Maybe Stack
 get boardId board =
     case board of
         EmptyBoard ->
-            Nothing
+            case boardId of
+                ZeroZero ->
+                    Just EmptyStack
+
+                _ ->
+                    Nothing
 
         OneByOne stack ->
             case boardId of
