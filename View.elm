@@ -155,6 +155,19 @@ edgeSpaces selected board =
             , edgeSpace (fromCenter -halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoThree selected
             ]
 
+        TwoByOne _ _ ->
+            [ edgeSpace (fromCenter -halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromCenter halfSpaceOffset -halfSpaceOffset) EdgeOneZero selected
+            , edgeSpace (fromCenter threeHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromCenter fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeThreeZero selected
+            , edgeSpace (fromCenter -threeHalfsSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
+            , edgeSpace (fromCenter threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeThreeOne selected
+            , edgeSpace (fromCenter -fiveHalfsSpaceOffset halfSpaceOffset) EdgeZeroTwo selected
+            , edgeSpace (fromCenter -threeHalfsSpaceOffset threeHalfsSpaceOffset) EdgeOneTwo selected
+            , edgeSpace (fromCenter -halfSpaceOffset fiveHalfsSpaceOffset) EdgeTwoTwo selected
+            , edgeSpace (fromCenter halfSpaceOffset (3.5 * spaceOffset)) EdgeThreeTwo selected
+            ]
+
         -- , edgeSpace (fromCenter (3.5 * spaceOffset) fiveHalfsSpaceOffset) EdgeTwoZero selected
         _ ->
             []
