@@ -17,12 +17,12 @@ update msg model =
         Place boardId ->
             placeMap (Model.place boardId) model
 
-        PlaceOnEdge boardId ->
+        PlaceOnEdge edgeId ->
             let
                 _ =
-                    Debug.log "PlaceOnEdge" boardId
+                    Debug.log "PlaceOnEdge" edgeId
             in
-                placeMap (Model.placeOnEdge boardId) model
+                placeMap (Model.placeOnEdge edgeId) model
 
         Mdl msg' ->
             Material.update msg' model

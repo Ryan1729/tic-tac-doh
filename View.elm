@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Model exposing (Model, Size(..), Stack(..), Board(..), BoardId(..), Stash)
+import Model exposing (Model, Size(..), Stack(..), Board(..), BoardId(..), EdgeId(..), Stash)
 import Html exposing (Html, text)
 import Html.Attributes
 import Msg exposing (Msg(..))
@@ -107,7 +107,7 @@ renderBoard selected board =
                         ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
                         ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
                         ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
-                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
+                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter halfSpaceOffset fiveHalfsSpaceOffset)
 
                 ThreeByThree spaces ->
                     spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter 0 -spaceOffset)
@@ -132,24 +132,39 @@ edgeSpaces selected board =
             []
 
         OneByOne _ ->
-            [ edgeSpace (fromCenter 0 -spaceOffset) ZeroZero selected
-            , edgeSpace (fromCenter spaceOffset 0) OneZero selected
-            , edgeSpace (fromCenter doubleSpaceOffset spaceOffset) TwoZero selected
-            , edgeSpace (fromCenter -spaceOffset 0) ZeroOne selected
-            , edgeSpace (fromCenter spaceOffset doubleSpaceOffset) TwoOne selected
-            , edgeSpace (fromCenter -doubleSpaceOffset spaceOffset) ZeroTwo selected
-            , edgeSpace (fromCenter -spaceOffset doubleSpaceOffset) OneTwo selected
-            , edgeSpace (fromCenter 0 (3 * spaceOffset)) TwoTwo selected
+            [ edgeSpace (fromCenter 0 -spaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromCenter spaceOffset 0) EdgeOneZero selected
+            , edgeSpace (fromCenter doubleSpaceOffset spaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromCenter -spaceOffset 0) EdgeZeroOne selected
+            , edgeSpace (fromCenter spaceOffset doubleSpaceOffset) EdgeTwoOne selected
+            , edgeSpace (fromCenter -doubleSpaceOffset spaceOffset) EdgeZeroTwo selected
+            , edgeSpace (fromCenter -spaceOffset doubleSpaceOffset) EdgeOneTwo selected
+            , edgeSpace (fromCenter 0 (3 * spaceOffset)) EdgeTwoTwo selected
             ]
 
+        OneByTwo _ _ ->
+            [ edgeSpace (fromCenter halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromCenter threeHalfsSpaceOffset -halfSpaceOffset) EdgeOneZero selected
+            , edgeSpace (fromCenter fiveHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromCenter -halfSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
+            , edgeSpace (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset) EdgeOneTwo selected
+            , edgeSpace (fromCenter -threeHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromCenter halfSpaceOffset fiveHalfsSpaceOffset) EdgeTwoTwo selected
+            , edgeSpace (fromCenter -fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeZeroThree selected
+            , edgeSpace (fromCenter -threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeOneThree selected
+            , edgeSpace (fromCenter -halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoThree selected
+            ]
+
+        -- , edgeSpace (fromCenter (3.5 * spaceOffset) fiveHalfsSpaceOffset) EdgeTwoZero selected
         _ ->
             []
 
 
 
--- OneByOne stack ->
---     spaceAndStack ZeroZero selected stack atCenter
---
+--  OneByTwo Stack Stack
+-- | TwoByOne Stack Stack
+-- | OneByThree Stack Stack Stack
+-- | ThreeByOne Stack Stack Stack
 -- OneByTwo stack0 stack1 ->
 --     spaceAndStack ZeroZero selected stack0 (fromCenter -halfSpaceOffset -halfSpaceOffset)
 --         ++ spaceAndStack ZeroOne selected stack1 (fromCenter halfSpaceOffset halfSpaceOffset)
@@ -245,8 +260,8 @@ space ( x, y ) maybeMsg =
             ]
 
 
-edgeSpace : ( Float, Float ) -> BoardId -> Maybe Size -> Svg Msg
-edgeSpace ( x, y ) boardId selected =
+edgeSpace : ( Float, Float ) -> EdgeId -> Maybe Size -> Svg Msg
+edgeSpace ( x, y ) edgeId selected =
     let
         dString =
             ("M " ++ toString x ++ " " ++ toString y)
@@ -255,7 +270,7 @@ edgeSpace ( x, y ) boardId selected =
         msgAttributes =
             case selected of
                 Just _ ->
-                    [ stroke "white", onClick (PlaceOnEdge boardId) ]
+                    [ stroke "white", onClick (PlaceOnEdge edgeId) ]
 
                 Nothing ->
                     [ stroke "black" ]
@@ -308,6 +323,10 @@ suffixSpaceOffsetString =
 
 threeHalfsSpaceOffset =
     halfSpaceOffset * 3
+
+
+fiveHalfsSpaceOffset =
+    halfSpaceOffset * 5
 
 
 doubleSpaceOffset =

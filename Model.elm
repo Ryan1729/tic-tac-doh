@@ -211,7 +211,26 @@ placeOnStack size stack =
         stack
 
 
-placeOnEdge : BoardId -> Size -> Board -> Board
+type EdgeId
+    = EdgeZeroZero
+    | EdgeZeroOne
+    | EdgeZeroTwo
+    | EdgeZeroThree
+    | EdgeOneZero
+    | EdgeOneOne
+    | EdgeOneTwo
+    | EdgeOneThree
+    | EdgeTwoZero
+    | EdgeTwoOne
+    | EdgeTwoTwo
+    | EdgeTwoThree
+    | EdgeThreeZero
+    | EdgeThreeOne
+    | EdgeThreeTwo
+    | EdgeThreeThree
+
+
+placeOnEdge : EdgeId -> Size -> Board -> Board
 placeOnEdge boardId size board =
     case board of
         EmptyBoard ->
@@ -219,36 +238,37 @@ placeOnEdge boardId size board =
 
         OneByOne stack ->
             case boardId of
-                ZeroZero ->
+                EdgeZeroZero ->
                     twoByTwo (Single size) EmptyStack EmptyStack stack
 
-                OneZero ->
+                EdgeOneZero ->
                     OneByTwo (Single size) stack
 
-                TwoZero ->
+                EdgeTwoZero ->
                     twoByTwo EmptyStack (Single size) stack EmptyStack
 
-                ZeroOne ->
+                EdgeZeroOne ->
                     TwoByOne (Single size) stack
 
-                OneOne ->
-                    board
-
-                TwoOne ->
+                EdgeTwoOne ->
                     TwoByOne stack (Single size)
 
-                OneTwo ->
+                EdgeOneTwo ->
                     OneByTwo stack (Single size)
 
-                ZeroTwo ->
+                EdgeZeroTwo ->
                     twoByTwo EmptyStack stack (Single size) EmptyStack
 
-                TwoTwo ->
+                EdgeTwoTwo ->
                     twoByTwo stack EmptyStack EmptyStack (Single size)
 
-        --
-        -- OneByTwo Stack Stack
+                _ ->
+                    board
+
+        -- OneByTwo s1 s2 ->
+        -- TwoByOne Stack Stack
         -- OneByThree Stack Stack Stack
+        -- ThreeByOne Stack Stack Stack
         -- TwoByTwo
         --     { zeroZero : Stack
         --     , zeroOne : Stack
