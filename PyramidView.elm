@@ -83,8 +83,8 @@ stashSpacing =
     5
 
 
-renderStack : Stack -> Float -> Float -> Svg Msg
-renderStack stack x y =
+renderStack : Stack -> ( Float, Float ) -> Svg Msg
+renderStack stack ( x, y ) =
     case stack of
         EmptyStack ->
             nullSvg

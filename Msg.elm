@@ -8,4 +8,5 @@ type Msg
     = Mdl (Material.Msg Msg)
     | NoOp
     | Place BoardId
+    | PlaceOnEdge BoardId
     | Select (Maybe Size)

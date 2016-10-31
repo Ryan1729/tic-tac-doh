@@ -83,7 +83,9 @@ type Board
     = EmptyBoard
     | OneByOne Stack
     | OneByTwo Stack Stack
+    | TwoByOne Stack Stack
     | OneByThree Stack Stack Stack
+    | ThreeByOne Stack Stack Stack
     | TwoByTwo
         { zeroZero : Stack
         , zeroOne : Stack
@@ -209,6 +211,73 @@ placeOnStack size stack =
         stack
 
 
+placeOnEdge : BoardId -> Size -> Board -> Board
+placeOnEdge boardId size board =
+    case board of
+        EmptyBoard ->
+            board
+
+        OneByOne stack ->
+            case boardId of
+                ZeroZero ->
+                    twoByTwo (Single size) EmptyStack EmptyStack stack
+
+                OneZero ->
+                    OneByTwo (Single size) stack
+
+                TwoZero ->
+                    twoByTwo EmptyStack (Single size) stack EmptyStack
+
+                ZeroOne ->
+                    TwoByOne (Single size) stack
+
+                OneOne ->
+                    board
+
+                TwoOne ->
+                    TwoByOne stack (Single size)
+
+                OneTwo ->
+                    OneByTwo stack (Single size)
+
+                ZeroTwo ->
+                    twoByTwo EmptyStack stack (Single size) EmptyStack
+
+                TwoTwo ->
+                    twoByTwo stack EmptyStack EmptyStack (Single size)
+
+        --
+        -- OneByTwo Stack Stack
+        -- OneByThree Stack Stack Stack
+        -- TwoByTwo
+        --     { zeroZero : Stack
+        --     , zeroOne : Stack
+        --     , oneZero : Stack
+        --     , oneOne : Stack
+        --     }
+        -- TwoByThree
+        --     { zeroZero : Stack
+        --     , zeroOne : Stack
+        --     , zeroTwo : Stack
+        --     , oneZero : Stack
+        --     , oneOne : Stack
+        --     , oneTwo : Stack
+        --     }
+        -- ThreeByThree
+        --     { zeroZero : Stack
+        --     , zeroOne : Stack
+        --     , zeroTwo : Stack
+        --     , oneZero : Stack
+        --     , oneOne : Stack
+        --     , oneTwo : Stack
+        --     , twoOne : Stack
+        --     , twoZero : Stack
+        --     , twoTwo : Stack
+        --     }
+        _ ->
+            board
+
+
 get : BoardId -> Board -> Maybe Stack
 get boardId board =
     case board of
@@ -248,6 +317,31 @@ get boardId board =
                     Just s1
 
                 ZeroTwo ->
+                    Just s2
+
+                _ ->
+                    Nothing
+
+        TwoByOne s0 s1 ->
+            case boardId of
+                ZeroZero ->
+                    Just s0
+
+                OneZero ->
+                    Just s1
+
+                _ ->
+                    Nothing
+
+        ThreeByOne s0 s1 s2 ->
+            case boardId of
+                ZeroZero ->
+                    Just s0
+
+                OneZero ->
+                    Just s1
+
+                TwoZero ->
                     Just s2
 
                 _ ->
@@ -353,6 +447,17 @@ set boardId stack board =
                 _ ->
                     board
 
+        TwoByOne s0 s1 ->
+            case boardId of
+                ZeroZero ->
+                    TwoByOne stack s1
+
+                OneZero ->
+                    TwoByOne s0 stack
+
+                _ ->
+                    board
+
         OneByThree s0 s1 s2 ->
             case boardId of
                 ZeroZero ->
@@ -363,6 +468,20 @@ set boardId stack board =
 
                 ZeroTwo ->
                     OneByThree s0 s1 stack
+
+                _ ->
+                    board
+
+        ThreeByOne s0 s1 s2 ->
+            case boardId of
+                ZeroZero ->
+                    ThreeByOne stack s1 s2
+
+                OneZero ->
+                    ThreeByOne s0 stack s2
+
+                TwoZero ->
+                    ThreeByOne s0 s1 stack
 
                 _ ->
                     board

@@ -68,53 +68,121 @@ centerY =
 
 renderBoard : Maybe Size -> Board -> Svg Msg
 renderBoard selected board =
+    let
+        determinedSpace =
+            case Debug.log "renderBoard" board of
+                EmptyBoard ->
+                    spaceAndStack ZeroZero selected EmptyStack (fromCenter 0 spaceOffset)
+
+                OneByOne stack ->
+                    spaceAndStack ZeroZero selected stack (fromCenter 0 spaceOffset)
+
+                OneByTwo stack0 stack1 ->
+                    spaceAndStack ZeroZero selected stack0 (fromCenter halfSpaceOffset halfSpaceOffset)
+                        ++ spaceAndStack ZeroOne selected stack1 (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
+
+                TwoByOne stack0 stack1 ->
+                    spaceAndStack ZeroZero selected stack0 (fromCenter -halfSpaceOffset halfSpaceOffset)
+                        ++ spaceAndStack OneZero selected stack1 (fromCenter halfSpaceOffset threeHalfsSpaceOffset)
+
+                OneByThree stack0 stack1 stack2 ->
+                    spaceAndStack ZeroZero selected stack0 (fromCenter -spaceOffset -spaceOffset)
+                        ++ spaceAndStack ZeroOne selected stack1 atCenter
+                        ++ spaceAndStack ZeroTwo selected stack2 (fromCenter spaceOffset spaceOffset)
+
+                ThreeByOne stack0 stack1 stack2 ->
+                    spaceAndStack ZeroZero selected stack0 (fromCenter -halfSpaceOffset 0)
+                        ++ spaceAndStack OneZero selected stack1 (fromCenter 0 halfSpaceOffset)
+                        ++ spaceAndStack TwoZero selected stack2 (fromCenter halfSpaceOffset spaceOffset)
+
+                TwoByTwo spaces ->
+                    spaceAndStack ZeroZero selected spaces.zeroZero atCenter
+                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset spaceOffset)
+                        ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset spaceOffset)
+                        ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 doubleSpaceOffset)
+
+                TwoByThree spaces ->
+                    spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
+                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
+                        ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
+                        ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
+                        ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
+                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
+
+                ThreeByThree spaces ->
+                    spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter 0 -spaceOffset)
+                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset 0)
+                        ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
+                        ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset 0)
+                        ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 spaceOffset)
+                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
+                        ++ spaceAndStack TwoZero selected spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
+                        ++ spaceAndStack TwoOne selected spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
+                        ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
+    in
+        edgeSpaces selected board
+            ++ determinedSpace
+            |> g []
+
+
+edgeSpaces : Maybe Size -> Board -> List (Svg Msg)
+edgeSpaces selected board =
     case board of
         EmptyBoard ->
-            g []
-                <| spaceAndStack ZeroZero selected EmptyStack atCenter
+            []
 
-        OneByOne stack ->
-            g []
-                <| spaceAndStack ZeroZero selected stack atCenter
+        OneByOne _ ->
+            [ edgeSpace (fromCenter 0 -spaceOffset) ZeroZero selected
+            , edgeSpace (fromCenter spaceOffset 0) OneZero selected
+            , edgeSpace (fromCenter doubleSpaceOffset spaceOffset) TwoZero selected
+            , edgeSpace (fromCenter -spaceOffset 0) ZeroOne selected
+            , edgeSpace (fromCenter spaceOffset doubleSpaceOffset) TwoOne selected
+            , edgeSpace (fromCenter -doubleSpaceOffset spaceOffset) ZeroTwo selected
+            , edgeSpace (fromCenter -spaceOffset doubleSpaceOffset) OneTwo selected
+            , edgeSpace (fromCenter 0 (3 * spaceOffset)) TwoTwo selected
+            ]
 
-        OneByTwo stack0 stack1 ->
-            g []
-                <| spaceAndStack ZeroZero selected stack0 (fromCenter -halfSpaceOffset -halfSpaceOffset)
-                ++ spaceAndStack ZeroOne selected stack1 (fromCenter halfSpaceOffset halfSpaceOffset)
+        _ ->
+            []
 
-        OneByThree stack0 stack1 stack2 ->
-            g []
-                <| spaceAndStack ZeroZero selected stack0 (fromCenter -spaceOffset -spaceOffset)
-                ++ spaceAndStack ZeroOne selected stack1 atCenter
-                ++ spaceAndStack ZeroTwo selected stack2 (fromCenter spaceOffset spaceOffset)
 
-        TwoByTwo spaces ->
-            g []
-                <| spaceAndStack ZeroZero selected spaces.zeroZero atCenter
-                ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset spaceOffset)
-                ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset spaceOffset)
-                ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 doubleSpaceOffset)
 
-        TwoByThree spaces ->
-            g []
-                <| spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
-                ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
-                ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
-                ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
-                ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
-                ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
-
-        ThreeByThree spaces ->
-            g []
-                <| spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter 0 -spaceOffset)
-                ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset 0)
-                ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
-                ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset 0)
-                ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 spaceOffset)
-                ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
-                ++ spaceAndStack TwoZero selected spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
-                ++ spaceAndStack TwoOne selected spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
-                ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
+-- OneByOne stack ->
+--     spaceAndStack ZeroZero selected stack atCenter
+--
+-- OneByTwo stack0 stack1 ->
+--     spaceAndStack ZeroZero selected stack0 (fromCenter -halfSpaceOffset -halfSpaceOffset)
+--         ++ spaceAndStack ZeroOne selected stack1 (fromCenter halfSpaceOffset halfSpaceOffset)
+--
+-- OneByThree stack0 stack1 stack2 ->
+--     spaceAndStack ZeroZero selected stack0 (fromCenter -spaceOffset -spaceOffset)
+--         ++ spaceAndStack ZeroOne selected stack1 atCenter
+--         ++ spaceAndStack ZeroTwo selected stack2 (fromCenter spaceOffset spaceOffset)
+--
+-- TwoByTwo spaces ->
+--     spaceAndStack ZeroZero selected spaces.zeroZero atCenter
+--         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset spaceOffset)
+--         ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset spaceOffset)
+--         ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 doubleSpaceOffset)
+--
+-- TwoByThree spaces ->
+--     spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
+--         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
+--         ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
+--         ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
+--         ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
+--         ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
+--
+-- ThreeByThree spaces ->
+--     spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter 0 -spaceOffset)
+--         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset 0)
+--         ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
+--         ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset 0)
+--         ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 spaceOffset)
+--         ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
+--         ++ spaceAndStack TwoZero selected spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
+--         ++ spaceAndStack TwoOne selected spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
+--         ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
 
 
 atCenter =
@@ -130,10 +198,10 @@ tupleAdd ( x, y ) ( xOffset, yOffset ) =
 
 
 spaceAndStack : BoardId -> Maybe Size -> Stack -> ( Float, Float ) -> List (Svg Msg)
-spaceAndStack boardId selected stack ( x, y ) =
+spaceAndStack boardId selected stack coords =
     [ spaceMsg boardId selected stack
-        |> space x y
-    , renderStack stack x y
+        |> space coords
+    , renderStack stack coords
     ]
 
 
@@ -150,8 +218,8 @@ spaceMsg boardId selected stack =
             Nothing
 
 
-space : Float -> Float -> Maybe Msg -> Svg Msg
-space x y maybeMsg =
+space : ( Float, Float ) -> Maybe Msg -> Svg Msg
+space ( x, y ) maybeMsg =
     let
         dString =
             ("M " ++ toString x ++ " " ++ toString y)
@@ -170,6 +238,34 @@ space x y maybeMsg =
                 (msgAttributes
                     ++ [ d dString
                        , fill "#444444"
+                       , strokeWidth "4"
+                       ]
+                )
+                []
+            ]
+
+
+edgeSpace : ( Float, Float ) -> BoardId -> Maybe Size -> Svg Msg
+edgeSpace ( x, y ) boardId selected =
+    let
+        dString =
+            ("M " ++ toString x ++ " " ++ toString y)
+                ++ spaceSuffix
+
+        msgAttributes =
+            case selected of
+                Just _ ->
+                    [ stroke "white", onClick (PlaceOnEdge boardId) ]
+
+                Nothing ->
+                    [ stroke "black" ]
+    in
+        g []
+            [ Svg.path
+                (msgAttributes
+                    ++ [ d dString
+                       , fill "#444444"
+                       , fillOpacity "0.4"
                        , strokeWidth "4"
                        ]
                 )
