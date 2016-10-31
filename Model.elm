@@ -14,7 +14,7 @@ type alias Model =
 defaultState =
     { mdl = Material.model
     , selected = Just Pawn
-    , board = twoByTwo FullTree EmptyStack FullNest PartialTree
+    , board = twoByThree FullTree EmptyStack FullNest PartialTree PartialNest EmptyStack
     , stash = defaultStash
     }
 

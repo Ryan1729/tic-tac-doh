@@ -201,30 +201,17 @@ edgeSpaces selected board =
             , edgeSpace (fromBoardOffset 0 (4 * spaceOffset)) EdgeThreeThree selected
             ]
 
+        TwoByThree _ ->
+            [ edgeSpace (fromBoardOffset halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromBoardOffset threeHalfsSpaceOffset -halfSpaceOffset) EdgeOneZero selected
+            , edgeSpace (fromBoardOffset fiveHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeZeroTwo selected
+            , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeOneTwo selected
+            , edgeSpace (fromBoardOffset -halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoTwo selected
+            ]
+
         _ ->
             []
-
-
-
---
--- TwoByThree spaces ->
---     spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset -halfSpaceOffset -halfSpaceOffset)
---         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset halfSpaceOffset halfSpaceOffset)
---         ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromBoardOffset threeHalfsSpaceOffset threeHalfsSpaceOffset)
---         ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -threeHalfsSpaceOffset halfSpaceOffset)
---         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset -halfSpaceOffset threeHalfsSpaceOffset)
---         ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset halfSpaceOffset (2.5 * spaceOffset))
---
--- ThreeByThree spaces ->
---     spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset 0 -spaceOffset)
---         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset spaceOffset 0)
---         ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromBoardOffset doubleSpaceOffset spaceOffset)
---         ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -spaceOffset 0)
---         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset 0 spaceOffset)
---         ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset spaceOffset doubleSpaceOffset)
---         ++ spaceAndStack TwoZero selected spaces.twoZero (fromBoardOffset -doubleSpaceOffset spaceOffset)
---         ++ spaceAndStack TwoOne selected spaces.twoOne (fromBoardOffset -spaceOffset doubleSpaceOffset)
---         ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromBoardOffset 0 (3 * spaceOffset))
 
 
 boardOffsetX =
