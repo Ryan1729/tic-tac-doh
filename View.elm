@@ -43,7 +43,7 @@ view model =
 
 
 boardWidth =
-    600
+    720
 
 
 boardWidthString =
@@ -51,7 +51,7 @@ boardWidthString =
 
 
 boardHeight =
-    600
+    720
 
 
 boardHeightString =
@@ -186,16 +186,26 @@ edgeSpaces selected board =
             , edgeSpace (fromBoardOffset halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoTwo selected
             ]
 
+        TwoByTwo _ ->
+            [ edgeSpace (fromBoardOffset 0 -doubleSpaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromBoardOffset spaceOffset -spaceOffset) EdgeOneZero selected
+            , edgeSpace (fromBoardOffset doubleSpaceOffset 0) EdgeTwoZero selected
+            , edgeSpace (fromBoardOffset (3 * spaceOffset) spaceOffset) EdgeThreeZero selected
+            , edgeSpace (fromBoardOffset -spaceOffset -spaceOffset) EdgeZeroOne selected
+            , edgeSpace (fromBoardOffset doubleSpaceOffset doubleSpaceOffset) EdgeThreeOne selected
+            , edgeSpace (fromBoardOffset -doubleSpaceOffset 0) EdgeZeroTwo selected
+            , edgeSpace (fromBoardOffset spaceOffset (3 * spaceOffset)) EdgeThreeTwo selected
+            , edgeSpace (fromBoardOffset -(3 * spaceOffset) spaceOffset) EdgeZeroThree selected
+            , edgeSpace (fromBoardOffset -doubleSpaceOffset doubleSpaceOffset) EdgeOneThree selected
+            , edgeSpace (fromBoardOffset -spaceOffset (3 * spaceOffset)) EdgeTwoThree selected
+            , edgeSpace (fromBoardOffset 0 (4 * spaceOffset)) EdgeThreeThree selected
+            ]
+
         _ ->
             []
 
 
 
--- TwoByTwo spaces ->
---     spaceAndStack ZeroZero selected spaces.zeroZero atBoardOffset
---         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset spaceOffset spaceOffset)
---         ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -spaceOffset spaceOffset)
---         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset 0 doubleSpaceOffset)
 --
 -- TwoByThree spaces ->
 --     spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset -halfSpaceOffset -halfSpaceOffset)
@@ -222,7 +232,7 @@ boardOffsetX =
 
 
 boardOffsetY =
-    centerY - 20
+    centerY - halfSpaceOffset
 
 
 atBoardOffset =
