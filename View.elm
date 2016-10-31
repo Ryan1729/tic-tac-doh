@@ -72,53 +72,53 @@ renderBoard selected board =
         determinedSpace =
             case Debug.log "renderBoard" board of
                 EmptyBoard ->
-                    spaceAndStack ZeroZero selected EmptyStack (fromCenter 0 spaceOffset)
+                    spaceAndStack ZeroZero selected EmptyStack (fromBoardOffset 0 spaceOffset)
 
                 OneByOne stack ->
-                    spaceAndStack ZeroZero selected stack (fromCenter 0 spaceOffset)
+                    spaceAndStack ZeroZero selected stack (fromBoardOffset 0 spaceOffset)
 
                 OneByTwo stack0 stack1 ->
-                    spaceAndStack ZeroZero selected stack0 (fromCenter halfSpaceOffset halfSpaceOffset)
-                        ++ spaceAndStack ZeroOne selected stack1 (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
+                    spaceAndStack ZeroZero selected stack0 (fromBoardOffset halfSpaceOffset halfSpaceOffset)
+                        ++ spaceAndStack ZeroOne selected stack1 (fromBoardOffset -halfSpaceOffset threeHalfsSpaceOffset)
 
                 TwoByOne stack0 stack1 ->
-                    spaceAndStack ZeroZero selected stack0 (fromCenter -halfSpaceOffset halfSpaceOffset)
-                        ++ spaceAndStack OneZero selected stack1 (fromCenter halfSpaceOffset threeHalfsSpaceOffset)
+                    spaceAndStack ZeroZero selected stack0 (fromBoardOffset -halfSpaceOffset halfSpaceOffset)
+                        ++ spaceAndStack OneZero selected stack1 (fromBoardOffset halfSpaceOffset threeHalfsSpaceOffset)
 
                 OneByThree stack0 stack1 stack2 ->
-                    spaceAndStack ZeroZero selected stack0 (fromCenter -spaceOffset -spaceOffset)
-                        ++ spaceAndStack ZeroOne selected stack1 atCenter
-                        ++ spaceAndStack ZeroTwo selected stack2 (fromCenter spaceOffset spaceOffset)
+                    spaceAndStack ZeroZero selected stack0 (fromBoardOffset halfSpaceOffset 0)
+                        ++ spaceAndStack OneZero selected stack1 (fromBoardOffset -halfSpaceOffset spaceOffset)
+                        ++ spaceAndStack TwoZero selected stack2 (fromBoardOffset -threeHalfsSpaceOffset doubleSpaceOffset)
 
                 ThreeByOne stack0 stack1 stack2 ->
-                    spaceAndStack ZeroZero selected stack0 (fromCenter -halfSpaceOffset 0)
-                        ++ spaceAndStack OneZero selected stack1 (fromCenter 0 halfSpaceOffset)
-                        ++ spaceAndStack TwoZero selected stack2 (fromCenter halfSpaceOffset spaceOffset)
+                    spaceAndStack ZeroZero selected stack0 (fromBoardOffset -spaceOffset -spaceOffset)
+                        ++ spaceAndStack ZeroOne selected stack1 atBoardOffset
+                        ++ spaceAndStack ZeroTwo selected stack2 (fromBoardOffset spaceOffset spaceOffset)
 
                 TwoByTwo spaces ->
-                    spaceAndStack ZeroZero selected spaces.zeroZero atCenter
-                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset spaceOffset)
-                        ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset spaceOffset)
-                        ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 doubleSpaceOffset)
+                    spaceAndStack ZeroZero selected spaces.zeroZero atBoardOffset
+                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset spaceOffset spaceOffset)
+                        ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -spaceOffset spaceOffset)
+                        ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset 0 doubleSpaceOffset)
 
                 TwoByThree spaces ->
-                    spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
-                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
-                        ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
-                        ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
-                        ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
-                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter halfSpaceOffset fiveHalfsSpaceOffset)
+                    spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset -halfSpaceOffset -halfSpaceOffset)
+                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset halfSpaceOffset halfSpaceOffset)
+                        ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromBoardOffset threeHalfsSpaceOffset threeHalfsSpaceOffset)
+                        ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -threeHalfsSpaceOffset halfSpaceOffset)
+                        ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset -halfSpaceOffset threeHalfsSpaceOffset)
+                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset halfSpaceOffset fiveHalfsSpaceOffset)
 
                 ThreeByThree spaces ->
-                    spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter 0 -spaceOffset)
-                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset 0)
-                        ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
-                        ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset 0)
-                        ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 spaceOffset)
-                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
-                        ++ spaceAndStack TwoZero selected spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
-                        ++ spaceAndStack TwoOne selected spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
-                        ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
+                    spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset 0 -spaceOffset)
+                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset spaceOffset 0)
+                        ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromBoardOffset doubleSpaceOffset spaceOffset)
+                        ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -spaceOffset 0)
+                        ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset 0 spaceOffset)
+                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset spaceOffset doubleSpaceOffset)
+                        ++ spaceAndStack TwoZero selected spaces.twoZero (fromBoardOffset -doubleSpaceOffset spaceOffset)
+                        ++ spaceAndStack TwoOne selected spaces.twoOne (fromBoardOffset -spaceOffset doubleSpaceOffset)
+                        ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromBoardOffset 0 (3 * spaceOffset))
     in
         edgeSpaces selected board
             ++ determinedSpace
@@ -132,43 +132,64 @@ edgeSpaces selected board =
             []
 
         OneByOne _ ->
-            [ edgeSpace (fromCenter 0 -spaceOffset) EdgeZeroZero selected
-            , edgeSpace (fromCenter spaceOffset 0) EdgeOneZero selected
-            , edgeSpace (fromCenter doubleSpaceOffset spaceOffset) EdgeTwoZero selected
-            , edgeSpace (fromCenter -spaceOffset 0) EdgeZeroOne selected
-            , edgeSpace (fromCenter spaceOffset doubleSpaceOffset) EdgeTwoOne selected
-            , edgeSpace (fromCenter -doubleSpaceOffset spaceOffset) EdgeZeroTwo selected
-            , edgeSpace (fromCenter -spaceOffset doubleSpaceOffset) EdgeOneTwo selected
-            , edgeSpace (fromCenter 0 (3 * spaceOffset)) EdgeTwoTwo selected
+            [ edgeSpace (fromBoardOffset 0 -spaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromBoardOffset spaceOffset 0) EdgeOneZero selected
+            , edgeSpace (fromBoardOffset doubleSpaceOffset spaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromBoardOffset -spaceOffset 0) EdgeZeroOne selected
+            , edgeSpace (fromBoardOffset spaceOffset doubleSpaceOffset) EdgeTwoOne selected
+            , edgeSpace (fromBoardOffset -doubleSpaceOffset spaceOffset) EdgeZeroTwo selected
+            , edgeSpace (fromBoardOffset -spaceOffset doubleSpaceOffset) EdgeOneTwo selected
+            , edgeSpace (fromBoardOffset 0 (3 * spaceOffset)) EdgeTwoTwo selected
             ]
 
         OneByTwo _ _ ->
-            [ edgeSpace (fromCenter halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
-            , edgeSpace (fromCenter threeHalfsSpaceOffset -halfSpaceOffset) EdgeOneZero selected
-            , edgeSpace (fromCenter fiveHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
-            , edgeSpace (fromCenter -halfSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
-            , edgeSpace (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset) EdgeOneTwo selected
-            , edgeSpace (fromCenter -threeHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
-            , edgeSpace (fromCenter halfSpaceOffset fiveHalfsSpaceOffset) EdgeTwoTwo selected
-            , edgeSpace (fromCenter -fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeZeroThree selected
-            , edgeSpace (fromCenter -threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeOneThree selected
-            , edgeSpace (fromCenter -halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoThree selected
+            [ edgeSpace (fromBoardOffset halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromBoardOffset threeHalfsSpaceOffset -halfSpaceOffset) EdgeOneZero selected
+            , edgeSpace (fromBoardOffset fiveHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromBoardOffset -halfSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
+            , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset halfSpaceOffset) EdgeTwoOne selected
+            , edgeSpace (fromBoardOffset threeHalfsSpaceOffset threeHalfsSpaceOffset) EdgeOneTwo selected
+            , edgeSpace (fromBoardOffset halfSpaceOffset fiveHalfsSpaceOffset) EdgeTwoTwo selected
+            , edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeZeroThree selected
+            , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeOneThree selected
+            , edgeSpace (fromBoardOffset -halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoThree selected
             ]
 
         TwoByOne _ _ ->
-            [ edgeSpace (fromCenter -halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
-            , edgeSpace (fromCenter halfSpaceOffset -halfSpaceOffset) EdgeOneZero selected
-            , edgeSpace (fromCenter threeHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
-            , edgeSpace (fromCenter fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeThreeZero selected
-            , edgeSpace (fromCenter -threeHalfsSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
-            , edgeSpace (fromCenter threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeThreeOne selected
-            , edgeSpace (fromCenter -fiveHalfsSpaceOffset halfSpaceOffset) EdgeZeroTwo selected
-            , edgeSpace (fromCenter -threeHalfsSpaceOffset threeHalfsSpaceOffset) EdgeOneTwo selected
-            , edgeSpace (fromCenter -halfSpaceOffset fiveHalfsSpaceOffset) EdgeTwoTwo selected
-            , edgeSpace (fromCenter halfSpaceOffset (3.5 * spaceOffset)) EdgeThreeTwo selected
+            [ edgeSpace (fromBoardOffset -halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromBoardOffset halfSpaceOffset -halfSpaceOffset) EdgeOneZero selected
+            , edgeSpace (fromBoardOffset threeHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromBoardOffset fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeThreeZero selected
+            , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
+            , edgeSpace (fromBoardOffset threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeThreeOne selected
+            , edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset halfSpaceOffset) EdgeZeroTwo selected
+            , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset threeHalfsSpaceOffset) EdgeOneTwo selected
+            , edgeSpace (fromBoardOffset -halfSpaceOffset fiveHalfsSpaceOffset) EdgeTwoTwo selected
+            , edgeSpace (fromBoardOffset halfSpaceOffset (3.5 * spaceOffset)) EdgeThreeTwo selected
             ]
 
-        -- , edgeSpace (fromCenter (3.5 * spaceOffset) fiveHalfsSpaceOffset) EdgeTwoZero selected
+        OneByThree _ _ _ ->
+            [ edgeSpace (fromBoardOffset -halfSpaceOffset -spaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset 0) EdgeTwoOne selected
+            , edgeSpace (fromBoardOffset threeHalfsSpaceOffset spaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromBoardOffset halfSpaceOffset doubleSpaceOffset) EdgeTwoTwo selected
+            , edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset spaceOffset) EdgeZeroThree selected
+            , edgeSpace (fromBoardOffset -halfSpaceOffset (3 * spaceOffset)) EdgeTwoThree selected
+            ]
+
+        --
+        -- ThreeByOne _ _ _ ->
+        --     [ edgeSpace (fromBoardOffset -halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
+        --     , edgeSpace (fromBoardOffset halfSpaceOffset -halfSpaceOffset) EdgeOneZero selected
+        --     , edgeSpace (fromBoardOffset threeHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
+        --     , edgeSpace (fromBoardOffset fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeThreeZero selected
+        --     , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
+        --     , edgeSpace (fromBoardOffset threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeThreeOne selected
+        --     , edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset halfSpaceOffset) EdgeZeroTwo selected
+        --     , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset threeHalfsSpaceOffset) EdgeOneTwo selected
+        --     , edgeSpace (fromBoardOffset -halfSpaceOffset fiveHalfsSpaceOffset) EdgeTwoTwo selected
+        --     , edgeSpace (fromBoardOffset halfSpaceOffset (3.5 * spaceOffset)) EdgeThreeTwo selected
+        --     ]
         _ ->
             []
 
@@ -179,46 +200,54 @@ edgeSpaces selected board =
 -- | OneByThree Stack Stack Stack
 -- | ThreeByOne Stack Stack Stack
 -- OneByTwo stack0 stack1 ->
---     spaceAndStack ZeroZero selected stack0 (fromCenter -halfSpaceOffset -halfSpaceOffset)
---         ++ spaceAndStack ZeroOne selected stack1 (fromCenter halfSpaceOffset halfSpaceOffset)
+--     spaceAndStack ZeroZero selected stack0 (fromBoardOffset -halfSpaceOffset -halfSpaceOffset)
+--         ++ spaceAndStack ZeroOne selected stack1 (fromBoardOffset halfSpaceOffset halfSpaceOffset)
 --
 -- OneByThree stack0 stack1 stack2 ->
---     spaceAndStack ZeroZero selected stack0 (fromCenter -spaceOffset -spaceOffset)
---         ++ spaceAndStack ZeroOne selected stack1 atCenter
---         ++ spaceAndStack ZeroTwo selected stack2 (fromCenter spaceOffset spaceOffset)
+--     spaceAndStack ZeroZero selected stack0 (fromBoardOffset -spaceOffset -spaceOffset)
+--         ++ spaceAndStack ZeroOne selected stack1 atBoardOffset
+--         ++ spaceAndStack ZeroTwo selected stack2 (fromBoardOffset spaceOffset spaceOffset)
 --
 -- TwoByTwo spaces ->
---     spaceAndStack ZeroZero selected spaces.zeroZero atCenter
---         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset spaceOffset)
---         ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset spaceOffset)
---         ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 doubleSpaceOffset)
+--     spaceAndStack ZeroZero selected spaces.zeroZero atBoardOffset
+--         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset spaceOffset spaceOffset)
+--         ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -spaceOffset spaceOffset)
+--         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset 0 doubleSpaceOffset)
 --
 -- TwoByThree spaces ->
---     spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter -halfSpaceOffset -halfSpaceOffset)
---         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter halfSpaceOffset halfSpaceOffset)
---         ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter threeHalfsSpaceOffset threeHalfsSpaceOffset)
---         ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -threeHalfsSpaceOffset halfSpaceOffset)
---         ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter -halfSpaceOffset threeHalfsSpaceOffset)
---         ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter halfSpaceOffset (2.5 * spaceOffset))
+--     spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset -halfSpaceOffset -halfSpaceOffset)
+--         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset halfSpaceOffset halfSpaceOffset)
+--         ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromBoardOffset threeHalfsSpaceOffset threeHalfsSpaceOffset)
+--         ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -threeHalfsSpaceOffset halfSpaceOffset)
+--         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset -halfSpaceOffset threeHalfsSpaceOffset)
+--         ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset halfSpaceOffset (2.5 * spaceOffset))
 --
 -- ThreeByThree spaces ->
---     spaceAndStack ZeroZero selected spaces.zeroZero (fromCenter 0 -spaceOffset)
---         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromCenter spaceOffset 0)
---         ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromCenter doubleSpaceOffset spaceOffset)
---         ++ spaceAndStack OneZero selected spaces.oneZero (fromCenter -spaceOffset 0)
---         ++ spaceAndStack OneOne selected spaces.oneOne (fromCenter 0 spaceOffset)
---         ++ spaceAndStack OneTwo selected spaces.oneTwo (fromCenter spaceOffset doubleSpaceOffset)
---         ++ spaceAndStack TwoZero selected spaces.twoZero (fromCenter -doubleSpaceOffset spaceOffset)
---         ++ spaceAndStack TwoOne selected spaces.twoOne (fromCenter -spaceOffset doubleSpaceOffset)
---         ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromCenter 0 (3 * spaceOffset))
+--     spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset 0 -spaceOffset)
+--         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset spaceOffset 0)
+--         ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromBoardOffset doubleSpaceOffset spaceOffset)
+--         ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -spaceOffset 0)
+--         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset 0 spaceOffset)
+--         ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset spaceOffset doubleSpaceOffset)
+--         ++ spaceAndStack TwoZero selected spaces.twoZero (fromBoardOffset -doubleSpaceOffset spaceOffset)
+--         ++ spaceAndStack TwoOne selected spaces.twoOne (fromBoardOffset -spaceOffset doubleSpaceOffset)
+--         ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromBoardOffset 0 (3 * spaceOffset))
 
 
-atCenter =
-    ( centerX, centerY )
+boardOffsetX =
+    centerX
 
 
-fromCenter x y =
-    ( centerX + x, centerY + y )
+boardOffsetY =
+    centerY - 20
+
+
+atBoardOffset =
+    ( boardOffsetX, boardOffsetY )
+
+
+fromBoardOffset x y =
+    ( boardOffsetX + x, boardOffsetY + y )
 
 
 tupleAdd ( x, y ) ( xOffset, yOffset ) =
