@@ -109,6 +109,14 @@ renderBoard selected board =
                         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset -halfSpaceOffset threeHalfsSpaceOffset)
                         ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset halfSpaceOffset fiveHalfsSpaceOffset)
 
+                ThreeByTwo spaces ->
+                    spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset 0 -halfSpaceOffset)
+                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset 0 threeHalfsSpaceOffset)
+                        ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -spaceOffset halfSpaceOffset)
+                        ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset spaceOffset halfSpaceOffset)
+                        ++ spaceAndStack TwoZero selected spaces.twoZero (fromBoardOffset -doubleSpaceOffset threeHalfsSpaceOffset)
+                        ++ spaceAndStack TwoOne selected spaces.twoOne (fromBoardOffset -spaceOffset fiveHalfsSpaceOffset)
+
                 ThreeByThree spaces ->
                     spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset 0 -spaceOffset)
                         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset spaceOffset 0)
@@ -208,6 +216,15 @@ edgeSpaces selected board =
             , edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeZeroTwo selected
             , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeOneTwo selected
             , edgeSpace (fromBoardOffset -halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoTwo selected
+            ]
+
+        ThreeByTwo _ ->
+            [ edgeSpace (fromBoardOffset -spaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
+            , edgeSpace (fromBoardOffset -doubleSpaceOffset -halfSpaceOffset) EdgeOneZero selected
+            , edgeSpace (fromBoardOffset -(3 * spaceOffset) halfSpaceOffset) EdgeTwoZero selected
+            , edgeSpace (fromBoardOffset doubleSpaceOffset threeHalfsSpaceOffset) EdgeZeroTwo selected
+            , edgeSpace (fromBoardOffset spaceOffset fiveHalfsSpaceOffset) EdgeOneTwo selected
+            , edgeSpace (fromBoardOffset 0 (3.5 * spaceOffset)) EdgeTwoTwo selected
             ]
 
         _ ->
