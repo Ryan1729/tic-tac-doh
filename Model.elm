@@ -15,7 +15,7 @@ defaultState =
     { mdl = Material.model
     , selected = Just Pawn
     , board =
-        OneByThree FullTree DroneTree NoDroneTree
+        twoByTwo FullTree DroneTree NoDroneTree FullNest
         -- twoByThree FullTree EmptyStack FullNest PartialTree PartialNest EmptyStack
     , stash = defaultStash
     }
@@ -402,32 +402,62 @@ placeOnEdge boardId size board =
                 _ ->
                     board
 
-        -- ThreeByOne Stack Stack Stack
-        -- TwoByTwo
-        --     { zeroZero : Stack
-        --     , zeroOne : Stack
-        --     , oneZero : Stack
-        --     , oneOne : Stack
-        --     }
+        TwoByTwo r ->
+            let
+                s1 =
+                    r.zeroZero
+
+                s2 =
+                    r.oneZero
+
+                s3 =
+                    r.zeroOne
+
+                s4 =
+                    r.oneOne
+            in
+                case boardId of
+                    EdgeZeroZero ->
+                        threeByThree (Single size) EmptyStack EmptyStack EmptyStack s1 s2 EmptyStack s3 s4
+
+                    EdgeOneZero ->
+                        twoByThree (Single size) EmptyStack s1 s2 s3 s4
+
+                    EdgeTwoZero ->
+                        twoByThree EmptyStack (Single size) s1 s2 s3 s4
+
+                    EdgeThreeZero ->
+                        threeByThree EmptyStack EmptyStack (Single size) s1 s2 EmptyStack s3 s4 EmptyStack
+
+                    EdgeZeroOne ->
+                        threeByTwo (Single size) s1 s2 EmptyStack s3 s4
+
+                    EdgeThreeOne ->
+                        threeByTwo s1 s2 (Single size) s3 s4 EmptyStack
+
+                    EdgeZeroTwo ->
+                        threeByTwo EmptyStack s1 s2 (Single size) s3 s4
+
+                    EdgeThreeTwo ->
+                        threeByTwo s1 s2 EmptyStack s3 s4 (Single size)
+
+                    EdgeZeroThree ->
+                        threeByThree EmptyStack s1 s2 EmptyStack s3 s4 (Single size) EmptyStack EmptyStack
+
+                    EdgeOneThree ->
+                        twoByThree s1 s2 s3 s4 (Single size) EmptyStack
+
+                    EdgeTwoThree ->
+                        twoByThree s1 s2 s3 s4 EmptyStack (Single size)
+
+                    EdgeThreeThree ->
+                        threeByThree s1 s2 EmptyStack s3 s4 EmptyStack EmptyStack EmptyStack (Single size)
+
+                    _ ->
+                        board
+
         -- TwoByThree
-        --     { zeroZero : Stack
-        --     , zeroOne : Stack
-        --     , zeroTwo : Stack
-        --     , oneZero : Stack
-        --     , oneOne : Stack
-        --     , oneTwo : Stack
-        --     }
-        -- ThreeByThree
-        --     { zeroZero : Stack
-        --     , zeroOne : Stack
-        --     , zeroTwo : Stack
-        --     , oneZero : Stack
-        --     , oneOne : Stack
-        --     , oneTwo : Stack
-        --     , twoOne : Stack
-        --     , twoZero : Stack
-        --     , twoTwo : Stack
-        --     }
+        -- ThreeByTwo
         _ ->
             board
 

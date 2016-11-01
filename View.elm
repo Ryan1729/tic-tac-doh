@@ -97,8 +97,8 @@ renderBoard selected board =
 
                 TwoByTwo spaces ->
                     spaceAndStack ZeroZero selected spaces.zeroZero atBoardOffset
-                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset spaceOffset spaceOffset)
-                        ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -spaceOffset spaceOffset)
+                        ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset spaceOffset spaceOffset)
+                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset -spaceOffset spaceOffset)
                         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset 0 doubleSpaceOffset)
 
                 TwoByThree spaces ->
