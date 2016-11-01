@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Model exposing (Model, Size(..), Stack(..), Board(..), BoardId(..), EdgeId(..), Stash)
+import Model exposing (Model, Size(..), Stack(..), Board(..), BoardId(..), EdgeId(..), Stash, Outcome(..))
 import Html exposing (Html, text)
 import Html.Attributes
 import Msg exposing (Msg(..))
@@ -39,7 +39,40 @@ view model =
                     ]
                 ]
             ]
+        , Html.div
+            [ Html.Attributes.style
+                [ ( "display", "flex" )
+                , ( "justify-content", "center" )
+                , ( "font-size", "xx-large" )
+                ]
+            ]
+            [ model.outcome
+                |> outcomeToString
+                |> Html.text
+            ]
         ]
+
+
+outcomeToString : Outcome -> String
+outcomeToString outcome =
+    case outcome of
+        TBD ->
+            ""
+
+        UserWin ->
+            "You win!"
+
+        UserWinByExhaustion ->
+            "The CPU has no legal moves, so you win!"
+
+        CPUWin ->
+            "You lost!"
+
+        CPUWinByExhaustion ->
+            "The you have no legal moves, so you lost!"
+
+        Tie ->
+            "No pieces are left so it's a tie..."
 
 
 boardWidth =

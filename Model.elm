@@ -8,6 +8,8 @@ type alias Model =
     , selected : Maybe Size
     , board : Board
     , stash : Stash
+    , player : Player
+    , outcome : Outcome
     }
 
 
@@ -16,13 +18,210 @@ defaultState =
     , selected = Just Pawn
     , board = EmptyBoard
     , stash = defaultStash
+    , player = User
+    , outcome = TBD
     }
+
+
+type Player
+    = User
+    | CPU
+
+
+nextPlayer player =
+    case player of
+        User ->
+            CPU
+
+        CPU ->
+            User
+
+
+type Outcome
+    = UserWin
+    | UserWinByExhaustion
+    | CPUWin
+    | CPUWinByExhaustion
+    | Tie
+    | TBD
+
+
+getOutcome : Model -> Outcome
+getOutcome model =
+    if stashIsEmpty model.stash then
+        Tie
+    else if noLegalMoves model then
+        case model.player of
+            User ->
+                CPUWinByExhaustion
+
+            CPU ->
+                UserWinByExhaustion
+    else
+        case model.board of
+            ThreeByThree r ->
+                checkLine r.zeroZero r.zeroOne r.zeroTwo
+                    |> andCheckLine r.oneZero r.oneOne r.oneTwo
+                    |> andCheckLine r.twoZero r.twoOne r.twoTwo
+                    |> andCheckLine r.zeroZero r.oneZero r.twoZero
+                    |> andCheckLine r.zeroOne r.oneOne r.twoOne
+                    |> andCheckLine r.zeroTwo r.oneTwo r.twoTwo
+                    |> andCheckLine r.zeroZero r.oneOne r.twoTwo
+                    |> andCheckLine r.zeroTwo r.oneOne r.twoZero
+                    |> subOutcomeToOutcome model.player
+
+            ThreeByTwo r ->
+                checkLine r.zeroZero r.oneZero r.twoZero
+                    |> andCheckLine r.zeroOne r.oneOne r.twoOne
+                    |> subOutcomeToOutcome model.player
+
+            TwoByThree r ->
+                checkLine r.zeroZero r.zeroOne r.zeroTwo
+                    |> andCheckLine r.oneZero r.oneOne r.oneTwo
+                    |> subOutcomeToOutcome model.player
+
+            OneByThree s1 s2 s3 ->
+                checkLine s1 s2 s3
+                    |> subOutcomeToOutcome model.player
+
+            ThreeByOne s1 s2 s3 ->
+                checkLine s1 s2 s3
+                    |> subOutcomeToOutcome model.player
+
+            _ ->
+                TBD
+
+
+noLegalMoves : Model -> Bool
+noLegalMoves model =
+    let
+        hasLegalMoves =
+            canPlaceQueen model || canPlaceDrone model || canPlacePawn model
+    in
+        not hasLegalMoves
+
+
+canPlaceQueen =
+    canPlace Queen
+
+
+canPlaceDrone =
+    canPlace Drone
+
+
+canPlacePawn =
+    canPlace Pawn
+
+
+canPlace : Size -> Model -> Bool
+canPlace size model =
+    if stashGet size model.stash <= 0 then
+        False
+    else
+        case model.board of
+            ThreeByThree r ->
+                threeByThreeAny (sizeFits size) r
+
+            _ ->
+                True
+
+
+threeByThreeAny : (Stack -> Bool) -> ThreeByThreeRecord -> Bool
+threeByThreeAny predicate record =
+    predicate record.zeroZero
+        || predicate record.zeroOne
+        || predicate record.zeroTwo
+        || predicate record.oneZero
+        || predicate record.oneOne
+        || predicate record.oneTwo
+        || predicate record.twoOne
+        || predicate record.twoZero
+        || predicate record.twoTwo
+
+
+type SubOutcome
+    = Win
+    | Undetermined
+
+
+subOutcomeToOutcome : Player -> SubOutcome -> Outcome
+subOutcomeToOutcome player subOutcome =
+    case subOutcome of
+        Undetermined ->
+            TBD
+
+        Win ->
+            case player of
+                User ->
+                    UserWin
+
+                CPU ->
+                    CPUWin
+
+
+checkLine : Stack -> Stack -> Stack -> SubOutcome
+checkLine stack1 stack2 stack3 =
+    case ( stack1, stack2, stack3 ) of
+        ( EmptyStack, _, _ ) ->
+            Undetermined
+
+        ( _, EmptyStack, _ ) ->
+            Undetermined
+
+        ( _, _, EmptyStack ) ->
+            Undetermined
+
+        ( Single size1, Single size2, Single size3 ) ->
+            checkSizes size1 size2 size3
+
+        _ ->
+            Undetermined
+
+
+
+-- | Single Size
+-- | FullTree
+-- | PartialTree
+-- | DroneTree
+-- | NoDroneTree
+-- | FullNest
+-- | PartialNest
+-- | DroneNest
+-- | NoDroneNest
+
+
+andCheckLine : Stack -> Stack -> Stack -> SubOutcome -> SubOutcome
+andCheckLine stack1 stack2 stack3 outcome =
+    case outcome of
+        Undetermined ->
+            checkLine stack1 stack2 stack3
+
+        predetermined ->
+            predetermined
 
 
 type Size
     = Queen
     | Drone
     | Pawn
+
+
+checkSizes : Size -> Size -> Size -> SubOutcome
+checkSizes size1 size2 size3 =
+    if size1 == size2 && size2 == size3 then
+        Win
+    else
+        Undetermined
+
+
+andCheckSize : Size -> Size -> Size -> SubOutcome -> SubOutcome
+andCheckSize size1 size2 size3 subOutcome =
+    case subOutcome of
+        Undetermined ->
+            checkSizes size1 size2 size3
+
+        predetermined ->
+            predetermined
 
 
 type alias Stash =
@@ -38,6 +237,11 @@ maxStashAmount =
 
 defaultStash =
     Stash maxStashAmount maxStashAmount maxStashAmount
+
+
+stashIsEmpty : Stash -> Bool
+stashIsEmpty { queen, drone, pawn } =
+    queen <= 0 && drone <= 0 && pawn <= 0
 
 
 stashGet : Size -> Stash -> Int
@@ -108,17 +312,20 @@ type Board
         , oneOne : Stack
         , twoOne : Stack
         }
-    | ThreeByThree
-        { zeroZero : Stack
-        , zeroOne : Stack
-        , zeroTwo : Stack
-        , oneZero : Stack
-        , oneOne : Stack
-        , oneTwo : Stack
-        , twoOne : Stack
-        , twoZero : Stack
-        , twoTwo : Stack
-        }
+    | ThreeByThree ThreeByThreeRecord
+
+
+type alias ThreeByThreeRecord =
+    { zeroZero : Stack
+    , zeroOne : Stack
+    , zeroTwo : Stack
+    , oneZero : Stack
+    , oneOne : Stack
+    , oneTwo : Stack
+    , twoOne : Stack
+    , twoZero : Stack
+    , twoTwo : Stack
+    }
 
 
 twoByTwo zeroZero zeroOne oneZero oneOne =

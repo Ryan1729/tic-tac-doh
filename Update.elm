@@ -1,7 +1,7 @@
 module Update exposing (update)
 
 import Msg exposing (Msg(..))
-import Model exposing (Model, Board, Size)
+import Model exposing (Model, Board, Size, Outcome(..))
 import Material
 
 
@@ -35,18 +35,31 @@ placeMap placeFunction model =
                 stashAmount =
                     Model.stashGet size model.stash
             in
-                if stashAmount >= 1 then
-                    ( { model
-                        | board = placeFunction size model.board
-                        , stash = Model.stashSet size (stashAmount - 1) model.stash
-                        , selected =
-                            if stashAmount >= 2 then
-                                model.selected
-                            else
-                                Nothing
-                      }
-                    , Cmd.none
-                    )
+                if model.outcome == TBD && stashAmount >= 1 then
+                    let
+                        newBoard =
+                            placeFunction size model.board
+
+                        newStashAmount =
+                            stashAmount - 1
+
+                        newModel =
+                            { model
+                                | board = newBoard
+                                , stash = Model.stashSet size newStashAmount model.stash
+                                , selected =
+                                    if newStashAmount >= 1 then
+                                        model.selected
+                                    else
+                                        Nothing
+                            }
+                    in
+                        ( { newModel
+                            | outcome = Model.getOutcome newModel
+                            , player = Model.nextPlayer newModel.player
+                          }
+                        , Cmd.none
+                        )
                 else
                     ( model, Cmd.none )
 
