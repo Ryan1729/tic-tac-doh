@@ -178,11 +178,11 @@ edgeSpaces selected board =
 
         OneByThree _ _ _ ->
             [ edgeSpace (fromBoardOffset -halfSpaceOffset -spaceOffset) EdgeZeroZero selected
-            , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset 0) EdgeTwoOne selected
             , edgeSpace (fromBoardOffset threeHalfsSpaceOffset spaceOffset) EdgeTwoZero selected
-            , edgeSpace (fromBoardOffset halfSpaceOffset doubleSpaceOffset) EdgeTwoTwo selected
-            , edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset spaceOffset) EdgeZeroThree selected
-            , edgeSpace (fromBoardOffset -halfSpaceOffset (3 * spaceOffset)) EdgeTwoThree selected
+            , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset 0) EdgeZeroOne selected
+            , edgeSpace (fromBoardOffset halfSpaceOffset doubleSpaceOffset) EdgeTwoOne selected
+            , edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset spaceOffset) EdgeZeroTwo selected
+            , edgeSpace (fromBoardOffset -halfSpaceOffset (3 * spaceOffset)) EdgeTwoTwo selected
             ]
 
         ThreeByOne _ _ _ ->

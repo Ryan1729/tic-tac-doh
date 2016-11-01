@@ -15,7 +15,7 @@ defaultState =
     { mdl = Material.model
     , selected = Just Pawn
     , board =
-        ThreeByOne FullTree DroneTree NoDroneTree
+        OneByThree FullTree DroneTree NoDroneTree
         -- twoByThree FullTree EmptyStack FullNest PartialTree PartialNest EmptyStack
     , stash = defaultStash
     }
@@ -356,7 +356,29 @@ placeOnEdge boardId size board =
                 _ ->
                     board
 
-        -- OneByThree
+        OneByThree s1 s2 s3 ->
+            case boardId of
+                EdgeZeroZero ->
+                    twoByThree (Single size) s1 EmptyStack s2 EmptyStack s3
+
+                EdgeTwoZero ->
+                    twoByThree s1 (Single size) s2 EmptyStack s3 EmptyStack
+
+                EdgeZeroOne ->
+                    twoByThree EmptyStack s1 (Single size) s2 EmptyStack s3
+
+                EdgeTwoOne ->
+                    twoByThree s1 EmptyStack s2 (Single size) s3 EmptyStack
+
+                EdgeZeroTwo ->
+                    twoByThree EmptyStack s1 EmptyStack s2 (Single size) s3
+
+                EdgeTwoTwo ->
+                    twoByThree s1 EmptyStack s2 EmptyStack s3 (Single size)
+
+                _ ->
+                    board
+
         ThreeByOne s1 s2 s3 ->
             case boardId of
                 EdgeZeroZero ->
