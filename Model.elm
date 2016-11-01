@@ -287,7 +287,7 @@ placeOnEdge boardId size board =
                     board
 
         OneByTwo s1 s2 ->
-            case Debug.log "" boardId of
+            case boardId of
                 EdgeZeroZero ->
                     twoByThree (Single size) EmptyStack EmptyStack s1 EmptyStack s2
 
