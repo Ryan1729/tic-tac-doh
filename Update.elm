@@ -21,11 +21,7 @@ update msg model =
             placeMap (Model.place boardId) model
 
         PlaceOnEdge edgeId ->
-            let
-                _ =
-                    Debug.log "PlaceOnEdge" edgeId
-            in
-                placeMap (Model.placeOnEdge edgeId) model
+            placeMap (Model.placeOnEdge edgeId) model
 
         Mdl msg' ->
             Material.update msg' model
@@ -43,6 +39,11 @@ placeMap placeFunction model =
                     ( { model
                         | board = placeFunction size model.board
                         , stash = Model.stashSet size (stashAmount - 1) model.stash
+                        , selected =
+                            if stashAmount >= 2 then
+                                model.selected
+                            else
+                                Nothing
                       }
                     , Cmd.none
                     )
