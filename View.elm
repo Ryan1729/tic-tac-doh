@@ -21,7 +21,7 @@ view model =
                 model.mdl
                 [ Button.raised
                 , Button.ripple
-                , Button.onClick NoOp
+                , Button.onClick NewGame
                 ]
                 [ text "New Game" ]
             ]

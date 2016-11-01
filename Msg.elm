@@ -10,3 +10,4 @@ type Msg
     | Place BoardId
     | PlaceOnEdge EdgeId
     | Select (Maybe Size)
+    | NewGame

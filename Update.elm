@@ -11,6 +11,9 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
+        NewGame ->
+            ( Model.defaultState, Cmd.none )
+
         Select selected ->
             ( { model | selected = selected }, Cmd.none )
 
