@@ -15,8 +15,7 @@ defaultState =
     { mdl = Material.model
     , selected = Just Pawn
     , board =
-        twoByTwo FullTree DroneTree NoDroneTree FullNest
-        -- twoByThree FullTree EmptyStack FullNest PartialTree PartialNest EmptyStack
+        twoByThree FullTree NoDroneTree FullNest PartialTree PartialNest NoDroneNest
     , stash = defaultStash
     }
 
@@ -99,8 +98,8 @@ type Board
         , oneZero : Stack
         , zeroOne : Stack
         , oneOne : Stack
-        , twoZero : Stack
-        , twoOne : Stack
+        , zeroTwo : Stack
+        , oneTwo : Stack
         }
     | ThreeByTwo
         { zeroZero : Stack
@@ -132,14 +131,14 @@ twoByTwo zeroZero zeroOne oneZero oneOne =
         }
 
 
-twoByThree zeroZero oneZero zeroOne oneOne twoZero twoOne =
+twoByThree zeroZero oneZero zeroOne oneOne zeroTwo oneTwo =
     TwoByThree
         { zeroZero = zeroZero
         , oneZero = oneZero
         , zeroOne = zeroOne
         , oneOne = oneOne
-        , twoZero = twoZero
-        , twoOne = twoOne
+        , zeroTwo = zeroTwo
+        , oneTwo = oneTwo
         }
 
 
@@ -456,7 +455,48 @@ placeOnEdge boardId size board =
                     _ ->
                         board
 
-        -- TwoByThree
+        TwoByThree r ->
+            let
+                s1 =
+                    r.zeroZero
+
+                s2 =
+                    r.oneZero
+
+                s3 =
+                    r.zeroOne
+
+                s4 =
+                    r.oneOne
+
+                s5 =
+                    r.zeroTwo
+
+                s6 =
+                    r.oneTwo
+            in
+                case boardId of
+                    EdgeZeroZero ->
+                        threeByThree (Single size) s1 s2 EmptyStack s3 s4 EmptyStack s5 s6
+
+                    EdgeThreeZero ->
+                        threeByThree s1 s2 (Single size) s3 s4 EmptyStack s5 s6 EmptyStack
+
+                    EdgeZeroOne ->
+                        threeByThree EmptyStack s1 s2 (Single size) s3 s4 EmptyStack s5 s6
+
+                    EdgeThreeOne ->
+                        threeByThree s1 s2 EmptyStack s3 s4 (Single size) s5 s6 EmptyStack
+
+                    EdgeZeroTwo ->
+                        threeByThree EmptyStack s1 s2 EmptyStack s3 s4 (Single size) s5 s6
+
+                    EdgeThreeTwo ->
+                        threeByThree s1 s2 EmptyStack s3 s4 EmptyStack s5 s6 (Single size)
+
+                    _ ->
+                        board
+
         -- ThreeByTwo
         _ ->
             board
@@ -563,10 +603,10 @@ get boardId board =
                     Just r.oneOne
 
                 TwoZero ->
-                    Just r.twoZero
+                    Just r.zeroTwo
 
                 TwoOne ->
-                    Just r.twoOne
+                    Just r.oneTwo
 
                 _ ->
                     Nothing
@@ -725,10 +765,10 @@ set boardId stack board =
                     TwoByThree { r | oneOne = stack }
 
                 TwoZero ->
-                    TwoByThree { r | twoZero = stack }
+                    TwoByThree { r | zeroTwo = stack }
 
                 TwoOne ->
-                    TwoByThree { r | twoOne = stack }
+                    TwoByThree { r | oneTwo = stack }
 
                 _ ->
                     board

@@ -106,8 +106,8 @@ renderBoard selected board =
                         ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset spaceOffset halfSpaceOffset)
                         ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset -spaceOffset halfSpaceOffset)
                         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset 0 threeHalfsSpaceOffset)
-                        ++ spaceAndStack TwoZero selected spaces.twoZero (fromBoardOffset -doubleSpaceOffset threeHalfsSpaceOffset)
-                        ++ spaceAndStack TwoOne selected spaces.twoOne (fromBoardOffset -spaceOffset fiveHalfsSpaceOffset)
+                        ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromBoardOffset -doubleSpaceOffset threeHalfsSpaceOffset)
+                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset -spaceOffset fiveHalfsSpaceOffset)
 
                 ThreeByTwo spaces ->
                     spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset -halfSpaceOffset -halfSpaceOffset)
@@ -211,11 +211,11 @@ edgeSpaces selected board =
 
         TwoByThree _ ->
             [ edgeSpace (fromBoardOffset -spaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
-            , edgeSpace (fromBoardOffset -doubleSpaceOffset -halfSpaceOffset) EdgeOneZero selected
-            , edgeSpace (fromBoardOffset -(3 * spaceOffset) halfSpaceOffset) EdgeTwoZero selected
-            , edgeSpace (fromBoardOffset doubleSpaceOffset threeHalfsSpaceOffset) EdgeZeroTwo selected
-            , edgeSpace (fromBoardOffset spaceOffset fiveHalfsSpaceOffset) EdgeOneTwo selected
-            , edgeSpace (fromBoardOffset 0 (3.5 * spaceOffset)) EdgeTwoTwo selected
+            , edgeSpace (fromBoardOffset doubleSpaceOffset threeHalfsSpaceOffset) EdgeThreeZero selected
+            , edgeSpace (fromBoardOffset -doubleSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
+            , edgeSpace (fromBoardOffset spaceOffset fiveHalfsSpaceOffset) EdgeThreeOne selected
+            , edgeSpace (fromBoardOffset -(3 * spaceOffset) halfSpaceOffset) EdgeZeroTwo selected
+            , edgeSpace (fromBoardOffset 0 (3.5 * spaceOffset)) EdgeThreeTwo selected
             ]
 
         ThreeByTwo _ ->
