@@ -201,6 +201,7 @@ getScale size =
 dotAttributes dotScale =
     [ stroke "#EEEEEE"
     , fillOpacity "0.0"
+    , pointerEvents "none"
     , dotScale
         / 9
         |> toString
