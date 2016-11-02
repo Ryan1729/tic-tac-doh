@@ -686,23 +686,7 @@ getAvailableEdgeIds board =
             ]
 
         ThreeByThree _ ->
-            [ EdgeZeroZero
-            , EdgeZeroOne
-            , EdgeZeroTwo
-            , EdgeZeroThree
-            , EdgeOneZero
-            , EdgeOneOne
-            , EdgeOneTwo
-            , EdgeOneThree
-            , EdgeTwoZero
-            , EdgeTwoOne
-            , EdgeTwoTwo
-            , EdgeTwoThree
-            , EdgeThreeZero
-            , EdgeThreeOne
-            , EdgeThreeTwo
-            , EdgeThreeThree
-            ]
+            []
 
 
 placeOnEdge : EdgeId -> Size -> Board -> Board
