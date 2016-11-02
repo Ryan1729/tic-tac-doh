@@ -48,9 +48,7 @@ type Outcome
 
 getOutcome : Model -> Outcome
 getOutcome model =
-    if stashIsEmpty model.stash then
-        Tie
-    else if noLegalMoves model then
+    if noLegalMoves model then
         case model.player of
             User ->
                 CPUWinByExhaustion
@@ -58,38 +56,51 @@ getOutcome model =
             CPU ->
                 UserWinByExhaustion
     else
-        case model.board of
-            ThreeByThree r ->
-                checkLine r.zeroZero r.zeroOne r.zeroTwo
-                    |> andCheckLine r.oneZero r.oneOne r.oneTwo
-                    |> andCheckLine r.twoZero r.twoOne r.twoTwo
-                    |> andCheckLine r.zeroZero r.oneZero r.twoZero
-                    |> andCheckLine r.zeroOne r.oneOne r.twoOne
-                    |> andCheckLine r.zeroTwo r.oneTwo r.twoTwo
-                    |> andCheckLine r.zeroZero r.oneOne r.twoTwo
-                    |> andCheckLine r.zeroTwo r.oneOne r.twoZero
-                    |> subOutcomeToOutcome model.player
+        case checkForWinner model of
+            TBD ->
+                if stashIsEmpty model.stash then
+                    Tie
+                else
+                    TBD
 
-            ThreeByTwo r ->
-                checkLine r.zeroZero r.oneZero r.twoZero
-                    |> andCheckLine r.zeroOne r.oneOne r.twoOne
-                    |> subOutcomeToOutcome model.player
+            result ->
+                result
 
-            TwoByThree r ->
-                checkLine r.zeroZero r.zeroOne r.zeroTwo
-                    |> andCheckLine r.oneZero r.oneOne r.oneTwo
-                    |> subOutcomeToOutcome model.player
 
-            OneByThree s1 s2 s3 ->
-                checkLine s1 s2 s3
-                    |> subOutcomeToOutcome model.player
+checkForWinner : Model -> Outcome
+checkForWinner model =
+    case model.board of
+        ThreeByThree r ->
+            checkLine r.zeroZero r.zeroOne r.zeroTwo
+                |> andCheckLine r.oneZero r.oneOne r.oneTwo
+                |> andCheckLine r.twoZero r.twoOne r.twoTwo
+                |> andCheckLine r.zeroZero r.oneZero r.twoZero
+                |> andCheckLine r.zeroOne r.oneOne r.twoOne
+                |> andCheckLine r.zeroTwo r.oneTwo r.twoTwo
+                |> andCheckLine r.zeroZero r.oneOne r.twoTwo
+                |> andCheckLine r.zeroTwo r.oneOne r.twoZero
+                |> subOutcomeToOutcome model.player
 
-            ThreeByOne s1 s2 s3 ->
-                checkLine s1 s2 s3
-                    |> subOutcomeToOutcome model.player
+        ThreeByTwo r ->
+            checkLine r.zeroZero r.oneZero r.twoZero
+                |> andCheckLine r.zeroOne r.oneOne r.twoOne
+                |> subOutcomeToOutcome model.player
 
-            _ ->
-                TBD
+        TwoByThree r ->
+            checkLine r.zeroZero r.zeroOne r.zeroTwo
+                |> andCheckLine r.oneZero r.oneOne r.oneTwo
+                |> subOutcomeToOutcome model.player
+
+        OneByThree s1 s2 s3 ->
+            checkLine s1 s2 s3
+                |> subOutcomeToOutcome model.player
+
+        ThreeByOne s1 s2 s3 ->
+            checkLine s1 s2 s3
+                |> subOutcomeToOutcome model.player
+
+        _ ->
+            TBD
 
 
 noLegalMoves : Model -> Bool
