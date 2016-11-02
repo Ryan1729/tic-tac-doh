@@ -441,11 +441,11 @@ type alias ThreeByThreeRecord =
     }
 
 
-twoByTwo zeroZero zeroOne oneZero oneOne =
+twoByTwo zeroZero oneZero zeroOne oneOne =
     TwoByTwo
         { zeroZero = zeroZero
-        , zeroOne = zeroOne
         , oneZero = oneZero
+        , zeroOne = zeroOne
         , oneOne = oneOne
         }
 
@@ -500,8 +500,89 @@ type BoardId
 
 getAvailableBoardIdSizePairs : Board -> Stash -> List ( BoardId, Size )
 getAvailableBoardIdSizePairs board stash =
-    --TODO
-    []
+    let
+        availableSizes =
+            getAvailableSizes stash
+
+        potentialBoardIds =
+            getPotentialBoardIds board
+    in
+        List.concatMap
+            (\boardId ->
+                case get boardId board of
+                    Just currentStack ->
+                        List.filterMap
+                            (\size ->
+                                if sizeFits size currentStack then
+                                    Just ( boardId, size )
+                                else
+                                    Nothing
+                            )
+                            availableSizes
+
+                    Nothing ->
+                        []
+            )
+            potentialBoardIds
+
+
+getPotentialBoardIds : Board -> List BoardId
+getPotentialBoardIds board =
+    case board of
+        EmptyBoard ->
+            [ ZeroZero ]
+
+        OneByOne _ ->
+            [ ZeroZero ]
+
+        OneByTwo _ _ ->
+            [ ZeroZero, ZeroOne ]
+
+        TwoByOne _ _ ->
+            [ ZeroZero, OneZero ]
+
+        OneByThree _ _ _ ->
+            [ ZeroZero, ZeroOne, ZeroTwo ]
+
+        ThreeByOne _ _ _ ->
+            [ ZeroZero, OneZero, TwoZero ]
+
+        TwoByTwo _ ->
+            [ ZeroZero
+            , ZeroOne
+            , OneZero
+            , OneOne
+            ]
+
+        TwoByThree _ ->
+            [ ZeroZero
+            , OneZero
+            , ZeroOne
+            , OneOne
+            , ZeroTwo
+            , OneTwo
+            ]
+
+        ThreeByTwo _ ->
+            [ ZeroZero
+            , OneZero
+            , TwoZero
+            , ZeroOne
+            , OneOne
+            , TwoOne
+            ]
+
+        ThreeByThree _ ->
+            [ ZeroZero
+            , ZeroOne
+            , ZeroTwo
+            , OneZero
+            , OneOne
+            , OneTwo
+            , TwoOne
+            , TwoZero
+            , TwoTwo
+            ]
 
 
 place : BoardId -> Size -> Board -> Board
