@@ -9,7 +9,7 @@ import Model exposing (Model, Size(..), Stack(..), Board(..), Stash)
 
 
 stashWidth =
-    600
+    500
 
 
 stashHeight =

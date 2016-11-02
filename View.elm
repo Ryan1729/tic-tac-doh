@@ -26,11 +26,16 @@ view model =
                 [ text "New Game" ]
             ]
         , Grid.grid []
-            [ Grid.cell [ Grid.size All 6 ]
+            [ Grid.cell [ Grid.size All 5 ]
                 [ renderStash model.selected model.stash
                 ]
             , Grid.cell [ Grid.size All 6 ]
-                [ svg
+                [ Html.div [ Html.Attributes.style [ ( "width", boardWidthString ++ "px" ), ( "display", "flex" ), ( "justify-content", "center" ), ( "font-size", (boardWidth / 16 |> toString) ++ "px" ) ] ]
+                    [ model.outcome
+                        |> outcomeToString
+                        |> Html.text
+                    ]
+                , svg
                     [ width boardWidthString
                     , height boardHeightString
                     , viewBox ("0 0 " ++ boardWidthString ++ " " ++ boardHeightString)
@@ -38,17 +43,6 @@ view model =
                     [ renderBoard model.selected model.board
                     ]
                 ]
-            ]
-        , Html.div
-            [ Html.Attributes.style
-                [ ( "display", "flex" )
-                , ( "justify-content", "center" )
-                , ( "font-size", "xx-large" )
-                ]
-            ]
-            [ model.outcome
-                |> outcomeToString
-                |> Html.text
             ]
         ]
 
@@ -72,7 +66,7 @@ outcomeToString outcome =
             "The you have no legal moves, so you lost!"
 
         Tie ->
-            "No pieces are left so it's a tie..."
+            "No pieces are left so it's a tie"
 
 
 boardWidth =
@@ -103,7 +97,7 @@ renderBoard : Maybe Size -> Board -> Svg Msg
 renderBoard selected board =
     let
         determinedSpace =
-            case Debug.log "renderBoard" board of
+            case board of
                 EmptyBoard ->
                     spaceAndStack ZeroZero selected EmptyStack (fromBoardOffset 0 spaceOffset)
 
