@@ -174,20 +174,116 @@ checkLine stack1 stack2 stack3 =
         ( Single size1, Single size2, Single size3 ) ->
             checkSizes size1 size2 size3
 
-        _ ->
-            Undetermined
+        ( FullTree, FullTree, FullTree ) ->
+            Win
 
+        ( FullTree, _, _ ) ->
+            checkLine (Single Queen) stack2 stack3
+                |> andCheckLine (Single Drone) stack2 stack3
+                |> andCheckLine (Single Pawn) stack2 stack3
 
+        ( _, FullTree, _ ) ->
+            checkLine stack1 (Single Queen) stack3
+                |> andCheckLine stack1 (Single Drone) stack3
+                |> andCheckLine stack1 (Single Pawn) stack3
 
--- | Single Size
--- | FullTree
--- | PartialTree
--- | DroneTree
--- | NoDroneTree
--- | FullNest
--- | PartialNest
--- | DroneNest
--- | NoDroneNest
+        ( _, _, FullTree ) ->
+            checkLine stack1 stack2 (Single Queen)
+                |> andCheckLine stack1 stack2 (Single Drone)
+                |> andCheckLine stack1 stack2 (Single Pawn)
+
+        ( PartialTree, PartialTree, PartialTree ) ->
+            Win
+
+        ( PartialTree, _, _ ) ->
+            checkLine (Single Queen) stack2 stack3
+                |> andCheckLine (Single Drone) stack2 stack3
+
+        ( _, PartialTree, _ ) ->
+            checkLine stack1 (Single Queen) stack3
+                |> andCheckLine stack1 (Single Drone) stack3
+
+        ( _, _, PartialTree ) ->
+            checkLine stack1 stack2 (Single Queen)
+                |> andCheckLine stack1 stack2 (Single Drone)
+
+        ( DroneTree, DroneTree, DroneTree ) ->
+            Win
+
+        ( DroneTree, _, _ ) ->
+            checkLine (Single Drone) stack2 stack3
+                |> andCheckLine (Single Pawn) stack2 stack3
+
+        ( _, DroneTree, _ ) ->
+            checkLine stack1 (Single Drone) stack3
+                |> andCheckLine stack1 (Single Pawn) stack3
+
+        ( _, _, DroneTree ) ->
+            checkLine stack1 stack2 (Single Drone)
+                |> andCheckLine stack1 stack2 (Single Pawn)
+
+        ( NoDroneTree, NoDroneTree, NoDroneTree ) ->
+            Win
+
+        ( NoDroneTree, _, _ ) ->
+            checkLine (Single Queen) stack2 stack3
+                |> andCheckLine (Single Pawn) stack2 stack3
+
+        ( _, NoDroneTree, _ ) ->
+            checkLine stack1 (Single Queen) stack3
+                |> andCheckLine stack1 (Single Pawn) stack3
+
+        ( _, _, NoDroneTree ) ->
+            checkLine stack1 stack2 (Single Queen)
+                |> andCheckLine stack1 stack2 (Single Pawn)
+
+        ( FullNest, FullNest, FullNest ) ->
+            Win
+
+        ( FullNest, _, _ ) ->
+            checkLine (Single Queen) stack2 stack3
+
+        ( _, FullNest, _ ) ->
+            checkLine stack1 (Single Queen) stack3
+
+        ( _, _, FullNest ) ->
+            checkLine stack1 stack2 (Single Queen)
+
+        ( PartialNest, PartialNest, PartialNest ) ->
+            Win
+
+        ( PartialNest, _, _ ) ->
+            checkLine (Single Drone) stack2 stack3
+
+        ( _, PartialNest, _ ) ->
+            checkLine stack1 (Single Drone) stack3
+
+        ( _, _, PartialNest ) ->
+            checkLine stack1 stack2 (Single Drone)
+
+        ( DroneNest, DroneNest, DroneNest ) ->
+            Win
+
+        ( DroneNest, _, _ ) ->
+            checkLine (Single Queen) stack2 stack3
+
+        ( _, DroneNest, _ ) ->
+            checkLine stack1 (Single Queen) stack3
+
+        ( _, _, DroneNest ) ->
+            checkLine stack1 stack2 (Single Queen)
+
+        ( NoDroneNest, NoDroneNest, NoDroneNest ) ->
+            Win
+
+        ( NoDroneNest, _, _ ) ->
+            checkLine (Single Queen) stack2 stack3
+
+        ( _, NoDroneNest, _ ) ->
+            checkLine stack1 (Single Queen) stack3
+
+        ( _, _, NoDroneNest ) ->
+            checkLine stack1 stack2 (Single Queen)
 
 
 andCheckLine : Stack -> Stack -> Stack -> SubOutcome -> SubOutcome
