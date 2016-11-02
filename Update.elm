@@ -1,7 +1,7 @@
 module Update exposing (update)
 
 import Msg exposing (Msg(..))
-import Model exposing (Model, Board, Size, Outcome(..))
+import Model exposing (Model, Board, Size(..), Outcome(..), BoardId, EdgeId)
 import Material
 import Extras
 import Random.Pcg as Random exposing (Seed)
@@ -35,16 +35,21 @@ placeMap placeFunction model =
         Just size ->
             if model.outcome == TBD && Model.stashGet size model.stash >= 1 then
                 let
+                    _ =
+                        Debug.log "beforeboard" model.board
+
                     postPlacementModel =
                         applyPlaceFunction placeFunction size model
 
+                    a_ =
+                        Debug.log "afterboard" postPlacementModel.board
+
                     newModel =
                         { postPlacementModel
-                            | outcome = Model.getOutcome postPlacementModel
-                            , player = Model.nextPlayer postPlacementModel.player
+                            | player = Model.CPU
                         }
 
-                    finalModel =
+                    postCPUTurnModel =
                         case cpuTurn newModel of
                             Just postCPUModel ->
                                 postCPUModel
@@ -60,7 +65,7 @@ placeMap placeFunction model =
                                                 otherOutcome
                                 }
                 in
-                    ( finalModel
+                    ( { postCPUTurnModel | player = Model.User }
                     , Cmd.none
                     )
             else
@@ -78,46 +83,79 @@ applyPlaceFunction placeFunction size model =
 
         newStashAmount =
             (Model.stashGet size model.stash) - 1
+
+        newModel =
+            { model
+                | board = newBoard
+                , stash = Model.stashSet size newStashAmount model.stash
+                , selected =
+                    if newStashAmount >= 1 then
+                        model.selected
+                    else
+                        Nothing
+            }
     in
-        { model
-            | board = newBoard
-            , stash = Model.stashSet size newStashAmount model.stash
-            , selected =
-                if newStashAmount >= 1 then
-                    model.selected
-                else
-                    Nothing
-        }
+        { newModel | outcome = Model.getOutcome newModel }
+
+
+applyMove : Model -> Move -> Model
+applyMove model move =
+    case move of
+        BoardMove ( boardId, size ) ->
+            applyPlaceFunction (Model.place boardId) size model
+
+        EdgeMove ( edgeId, size ) ->
+            applyPlaceFunction (Model.placeOnEdge edgeId) size model
+
+
+type Move
+    = BoardMove ( BoardId, Size )
+    | EdgeMove ( EdgeId, Size )
 
 
 cpuTurn : Model -> Maybe Model
 cpuTurn model =
     if model.outcome == TBD && model.player == Model.CPU then
         let
-            placeFunctions : List (Model -> Model)
-            placeFunctions =
-                --TODO applyPlaceFunction [placeFunctions]
-                []
+            _ =
+                Debug.log "cpu sees this board" model.board
+
+            availableBoardIdSizePairs : List ( BoardId, Size )
+            availableBoardIdSizePairs =
+                Model.getAvailableBoardIdSizePairs model.board model.stash
+
+            availableEdgeIdSizePairs : List ( EdgeId, Size )
+            availableEdgeIdSizePairs =
+                Model.getAvailableEdgeIdSizePairs model.board model.stash
+
+            moves : List Move
+            moves =
+                (List.map BoardMove availableBoardIdSizePairs
+                    ++ List.map EdgeMove availableEdgeIdSizePairs
+                )
                     |> shuffle (Random.initialSeed 42)
 
             maybeWinningMove =
-                Extras.find (\f -> model |> f |> Model.getOutcome |> (==) Model.CPUWin) placeFunctions
+                Extras.find (applyMove model >> Model.getOutcome >> (==) Model.CPUWin) moves
         in
             case maybeWinningMove of
                 Just move ->
-                    model
-                        |> move
+                    move
+                        |> Debug.log "Winner"
+                        |> applyMove model
                         |> Just
 
                 Nothing ->
                     let
                         maybeMove =
-                            Random.step (Random.sample placeFunctions) (Random.initialSeed 42)
+                            Random.step (Random.sample moves) (Random.initialSeed 42)
                                 |> fst
+                                |> Debug.log ""
                     in
-                        Maybe.map (\move -> move model) maybeMove
+                        Maybe.map (applyMove model) maybeMove
     else
         Nothing
+            |> Debug.log "?"
 
 
 shuffle : Seed -> List a -> List a
