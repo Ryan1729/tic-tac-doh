@@ -61,7 +61,7 @@ placeMap placeFunction model =
                         , Cmd.none
                         )
                 else
-                    ( model, Cmd.none )
+                    ( { model | selected = Nothing }, Cmd.none )
 
         Nothing ->
             ( model, Cmd.none )
