@@ -146,13 +146,13 @@ renderBoard selected board =
 
                 ThreeByThree spaces ->
                     spaceAndStack ZeroZero selected spaces.zeroZero (fromBoardOffset 0 -spaceOffset)
-                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset spaceOffset 0)
-                        ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromBoardOffset doubleSpaceOffset spaceOffset)
-                        ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset -spaceOffset 0)
+                        ++ spaceAndStack OneZero selected spaces.oneZero (fromBoardOffset spaceOffset 0)
+                        ++ spaceAndStack TwoZero selected spaces.twoZero (fromBoardOffset doubleSpaceOffset spaceOffset)
+                        ++ spaceAndStack ZeroOne selected spaces.zeroOne (fromBoardOffset -spaceOffset 0)
                         ++ spaceAndStack OneOne selected spaces.oneOne (fromBoardOffset 0 spaceOffset)
-                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset spaceOffset doubleSpaceOffset)
-                        ++ spaceAndStack TwoZero selected spaces.twoZero (fromBoardOffset -doubleSpaceOffset spaceOffset)
-                        ++ spaceAndStack TwoOne selected spaces.twoOne (fromBoardOffset -spaceOffset doubleSpaceOffset)
+                        ++ spaceAndStack TwoOne selected spaces.twoOne (fromBoardOffset spaceOffset doubleSpaceOffset)
+                        ++ spaceAndStack ZeroTwo selected spaces.zeroTwo (fromBoardOffset -doubleSpaceOffset spaceOffset)
+                        ++ spaceAndStack OneTwo selected spaces.oneTwo (fromBoardOffset -spaceOffset doubleSpaceOffset)
                         ++ spaceAndStack TwoTwo selected spaces.twoTwo (fromBoardOffset 0 (3 * spaceOffset))
     in
         edgeSpaces selected board

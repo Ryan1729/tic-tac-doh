@@ -472,7 +472,7 @@ threeByTwo zeroZero oneZero twoZero zeroOne oneOne twoOne =
         }
 
 
-threeByThree zeroZero zeroOne zeroTwo oneZero oneOne oneTwo twoZero twoOne twoTwo =
+threeByThree zeroZero oneZero twoZero zeroOne oneOne twoOne zeroTwo oneTwo twoTwo =
     ThreeByThree
         { zeroZero = zeroZero
         , zeroOne = zeroOne
@@ -574,20 +574,20 @@ getPotentialBoardIds board =
 
         ThreeByThree _ ->
             [ ZeroZero
-            , ZeroOne
-            , ZeroTwo
             , OneZero
-            , OneOne
-            , OneTwo
-            , TwoOne
             , TwoZero
+            , ZeroOne
+            , OneOne
+            , TwoOne
+            , ZeroTwo
+            , OneTwo
             , TwoTwo
             ]
 
 
 place : BoardId -> Size -> Board -> Board
 place boardId size board =
-    case get (Debug.log "placeboardId" boardId) board of
+    case get boardId board of
         Just stack ->
             set boardId (placeOnStack size stack) board
 
@@ -1227,168 +1227,164 @@ get boardId board =
 
 set : BoardId -> Stack -> Board -> Board
 set boardId stack board =
-    let
-        _ =
-            Debug.log "boardId" boardId
-    in
-        case board of
-            EmptyBoard ->
-                case boardId of
-                    ZeroZero ->
-                        OneByOne stack
+    case board of
+        EmptyBoard ->
+            case boardId of
+                ZeroZero ->
+                    OneByOne stack
 
-                    _ ->
-                        board
+                _ ->
+                    board
 
-            OneByOne _ ->
-                case boardId of
-                    ZeroZero ->
-                        OneByOne stack
+        OneByOne _ ->
+            case boardId of
+                ZeroZero ->
+                    OneByOne stack
 
-                    _ ->
-                        board
+                _ ->
+                    board
 
-            OneByTwo s0 s1 ->
-                case boardId of
-                    ZeroZero ->
-                        OneByTwo stack s1
+        OneByTwo s0 s1 ->
+            case boardId of
+                ZeroZero ->
+                    OneByTwo stack s1
 
-                    ZeroOne ->
-                        OneByTwo s0 stack
+                ZeroOne ->
+                    OneByTwo s0 stack
 
-                    _ ->
-                        board
+                _ ->
+                    board
 
-            TwoByOne s0 s1 ->
-                case boardId of
-                    ZeroZero ->
-                        TwoByOne stack s1
+        TwoByOne s0 s1 ->
+            case boardId of
+                ZeroZero ->
+                    TwoByOne stack s1
 
-                    OneZero ->
-                        TwoByOne s0 stack
+                OneZero ->
+                    TwoByOne s0 stack
 
-                    _ ->
-                        board
+                _ ->
+                    board
 
-            OneByThree s0 s1 s2 ->
-                case boardId of
-                    ZeroZero ->
-                        OneByThree stack s1 s2
+        OneByThree s0 s1 s2 ->
+            case boardId of
+                ZeroZero ->
+                    OneByThree stack s1 s2
 
-                    ZeroOne ->
-                        OneByThree s0 stack s2
+                ZeroOne ->
+                    OneByThree s0 stack s2
 
-                    ZeroTwo ->
-                        OneByThree s0 s1 stack
+                ZeroTwo ->
+                    OneByThree s0 s1 stack
 
-                    _ ->
-                        board
+                _ ->
+                    board
 
-            ThreeByOne s0 s1 s2 ->
-                case boardId of
-                    ZeroZero ->
-                        ThreeByOne stack s1 s2
+        ThreeByOne s0 s1 s2 ->
+            case boardId of
+                ZeroZero ->
+                    ThreeByOne stack s1 s2
 
-                    OneZero ->
-                        ThreeByOne s0 stack s2
+                OneZero ->
+                    ThreeByOne s0 stack s2
 
-                    TwoZero ->
-                        ThreeByOne s0 s1 stack
+                TwoZero ->
+                    ThreeByOne s0 s1 stack
 
-                    _ ->
-                        board
+                _ ->
+                    board
 
-            TwoByTwo r ->
-                case boardId of
-                    ZeroZero ->
-                        TwoByTwo { r | zeroZero = stack }
+        TwoByTwo r ->
+            case boardId of
+                ZeroZero ->
+                    TwoByTwo { r | zeroZero = stack }
 
-                    ZeroOne ->
-                        TwoByTwo { r | zeroOne = stack }
+                ZeroOne ->
+                    TwoByTwo { r | zeroOne = stack }
 
-                    OneZero ->
-                        TwoByTwo { r | oneZero = stack }
+                OneZero ->
+                    TwoByTwo { r | oneZero = stack }
 
-                    OneOne ->
-                        TwoByTwo { r | oneOne = stack }
+                OneOne ->
+                    TwoByTwo { r | oneOne = stack }
 
-                    _ ->
-                        board
+                _ ->
+                    board
 
-            TwoByThree r ->
-                case boardId of
-                    ZeroZero ->
-                        TwoByThree { r | zeroZero = stack }
+        TwoByThree r ->
+            case boardId of
+                ZeroZero ->
+                    TwoByThree { r | zeroZero = stack }
 
-                    ZeroOne ->
-                        TwoByThree { r | zeroOne = stack }
+                ZeroOne ->
+                    TwoByThree { r | zeroOne = stack }
 
-                    OneZero ->
-                        TwoByThree { r | oneZero = stack }
+                OneZero ->
+                    TwoByThree { r | oneZero = stack }
 
-                    OneOne ->
-                        TwoByThree { r | oneOne = stack }
+                OneOne ->
+                    TwoByThree { r | oneOne = stack }
 
-                    ZeroTwo ->
-                        TwoByThree { r | zeroTwo = stack }
+                ZeroTwo ->
+                    TwoByThree { r | zeroTwo = stack }
 
-                    OneTwo ->
-                        TwoByThree { r | oneTwo = stack }
+                OneTwo ->
+                    TwoByThree { r | oneTwo = stack }
 
-                    _ ->
-                        board
+                _ ->
+                    board
 
-            ThreeByTwo r ->
-                case boardId of
-                    ZeroZero ->
-                        ThreeByTwo { r | zeroZero = stack }
+        ThreeByTwo r ->
+            case boardId of
+                ZeroZero ->
+                    ThreeByTwo { r | zeroZero = stack }
 
-                    ZeroOne ->
-                        ThreeByTwo { r | oneZero = stack }
+                OneZero ->
+                    ThreeByTwo { r | oneZero = stack }
 
-                    ZeroTwo ->
-                        ThreeByTwo { r | twoZero = stack }
+                TwoZero ->
+                    ThreeByTwo { r | twoZero = stack }
 
-                    OneZero ->
-                        ThreeByTwo { r | zeroOne = stack }
+                ZeroOne ->
+                    ThreeByTwo { r | zeroOne = stack }
 
-                    OneOne ->
-                        ThreeByTwo { r | oneOne = stack }
+                OneOne ->
+                    ThreeByTwo { r | oneOne = stack }
 
-                    OneTwo ->
-                        ThreeByTwo { r | twoOne = stack }
+                TwoOne ->
+                    ThreeByTwo { r | twoOne = stack }
 
-                    _ ->
-                        board
+                _ ->
+                    board
 
-            ThreeByThree r ->
-                case boardId of
-                    ZeroZero ->
-                        ThreeByThree { r | zeroZero = stack }
+        ThreeByThree r ->
+            case boardId of
+                ZeroZero ->
+                    ThreeByThree { r | zeroZero = stack }
 
-                    ZeroOne ->
-                        ThreeByThree { r | zeroOne = stack }
+                ZeroOne ->
+                    ThreeByThree { r | zeroOne = stack }
 
-                    ZeroTwo ->
-                        ThreeByThree { r | zeroTwo = stack }
+                ZeroTwo ->
+                    ThreeByThree { r | zeroTwo = stack }
 
-                    OneZero ->
-                        ThreeByThree { r | oneZero = stack }
+                OneZero ->
+                    ThreeByThree { r | oneZero = stack }
 
-                    OneOne ->
-                        ThreeByThree { r | oneOne = stack }
+                OneOne ->
+                    ThreeByThree { r | oneOne = stack }
 
-                    OneTwo ->
-                        ThreeByThree { r | oneTwo = stack }
+                OneTwo ->
+                    ThreeByThree { r | oneTwo = stack }
 
-                    TwoZero ->
-                        ThreeByThree { r | twoZero = stack }
+                TwoZero ->
+                    ThreeByThree { r | twoZero = stack }
 
-                    TwoOne ->
-                        ThreeByThree { r | twoOne = stack }
+                TwoOne ->
+                    ThreeByThree { r | twoOne = stack }
 
-                    TwoTwo ->
-                        ThreeByThree { r | twoTwo = stack }
+                TwoTwo ->
+                    ThreeByThree { r | twoTwo = stack }
 
 
 sizeFits : Size -> Stack -> Bool

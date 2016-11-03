@@ -121,8 +121,8 @@ cpuTurn model =
             moves =
                 getMoves model
         in
-            Extras.find (winningMove model) moves
-                |> Extras.orElseLazy (\() -> Extras.find (nonLosingMove model) moves)
+            Extras.find (cpuWinningMove model) moves
+                |> Extras.orElseLazy (\() -> Extras.find (nonLosingMove model) (Debug.log "no winner" moves))
                 |> Extras.orElseLazy (\() -> Random.step (Random.sample moves) (Random.initialSeed 42) |> fst)
                 |> Maybe.map (applyMove model)
     else
@@ -146,26 +146,49 @@ getMoves model =
             |> shuffle (Random.initialSeed 42)
 
 
-winningMove : Model -> Move -> Bool
-winningMove model =
+cpuWinningMove : Model -> Move -> Bool
+cpuWinningMove model =
     applyMove model >> Model.getOutcome >> (==) Model.CPUWin
+
+
+playerWinningMove : Model -> Move -> Bool
+playerWinningMove model move =
+    let
+        _ =
+            Debug.log "board" model.board
+
+        _ =
+            Debug.log "move" move
+    in
+        move |> applyMove model >> Model.getOutcome >> Debug.log "playerWinningMove outcome" >> (==) Model.UserWin
 
 
 nonLosingMove : Model -> Move -> Bool
 nonLosingMove model move =
     let
-        potentialFuture =
+        m =
             applyMove model move
+
+        potentialFuture =
+            { m | player = Model.User }
 
         potentialFutureMoves =
             getMoves potentialFuture
     in
-        case Extras.find (winningMove model) potentialFutureMoves of
+        case Extras.find (playerWinningMove potentialFuture) potentialFutureMoves of
             Just _ ->
                 False
+                    |> Debug.log "gave up"
 
             Nothing ->
-                True
+                let
+                    _ =
+                        Debug.log "model" model
+
+                    _ =
+                        Debug.log "potentialFutureMoves" potentialFutureMoves
+                in
+                    True
 
 
 shuffle : Seed -> List a -> List a
