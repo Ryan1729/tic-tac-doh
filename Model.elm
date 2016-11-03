@@ -48,23 +48,22 @@ type Outcome
 
 getOutcome : Model -> Outcome
 getOutcome model =
-    if noLegalMoves model then
-        case model.player of
-            User ->
-                CPUWinByExhaustion
+    case checkForWinner model of
+        TBD ->
+            if stashIsEmpty model.stash then
+                Tie
+            else if noLegalMoves model then
+                case model.player of
+                    User ->
+                        CPUWinByExhaustion
 
-            CPU ->
-                UserWinByExhaustion
-    else
-        case checkForWinner model of
-            TBD ->
-                if stashIsEmpty model.stash then
-                    Tie
-                else
-                    TBD
+                    CPU ->
+                        UserWinByExhaustion
+            else
+                TBD
 
-            result ->
-                result
+        result ->
+            result
 
 
 checkForWinner : Model -> Outcome
@@ -1177,19 +1176,19 @@ get boardId board =
                 ZeroZero ->
                     Just r.zeroZero
 
-                ZeroOne ->
+                OneZero ->
                     Just r.oneZero
 
-                ZeroTwo ->
+                TwoZero ->
                     Just r.twoZero
 
-                OneZero ->
+                ZeroOne ->
                     Just r.zeroOne
 
                 OneOne ->
                     Just r.oneOne
 
-                OneTwo ->
+                TwoOne ->
                     Just r.twoOne
 
                 _ ->

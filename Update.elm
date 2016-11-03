@@ -35,14 +35,8 @@ placeMap placeFunction model =
         Just size ->
             if model.outcome == TBD && Model.stashGet size model.stash >= 1 then
                 let
-                    _ =
-                        Debug.log "beforeboard" model.board
-
                     postPlacementModel =
                         applyPlaceFunction placeFunction size model
-
-                    a_ =
-                        Debug.log "afterboard" postPlacementModel.board
 
                     newModel =
                         { postPlacementModel
@@ -122,7 +116,7 @@ cpuTurn model =
                 getMoves model
         in
             Extras.find (cpuWinningMove model) moves
-                |> Extras.orElseLazy (\() -> Extras.find (nonLosingMove model) (Debug.log "no winner" moves))
+                |> Extras.orElseLazy (\() -> Extras.find (nonLosingMove model) moves)
                 |> Extras.orElseLazy (\() -> Random.step (Random.sample moves) (Random.initialSeed 42) |> fst)
                 |> Maybe.map (applyMove model)
     else
@@ -153,14 +147,7 @@ cpuWinningMove model =
 
 playerWinningMove : Model -> Move -> Bool
 playerWinningMove model move =
-    let
-        _ =
-            Debug.log "board" model.board
-
-        _ =
-            Debug.log "move" move
-    in
-        move |> applyMove model >> Model.getOutcome >> Debug.log "playerWinningMove outcome" >> (==) Model.UserWin
+    move |> applyMove model >> Model.getOutcome >> (==) Model.UserWin
 
 
 nonLosingMove : Model -> Move -> Bool
@@ -178,17 +165,9 @@ nonLosingMove model move =
         case Extras.find (playerWinningMove potentialFuture) potentialFutureMoves of
             Just _ ->
                 False
-                    |> Debug.log "gave up"
 
             Nothing ->
-                let
-                    _ =
-                        Debug.log "model" model
-
-                    _ =
-                        Debug.log "potentialFutureMoves" potentialFutureMoves
-                in
-                    True
+                True
 
 
 shuffle : Seed -> List a -> List a

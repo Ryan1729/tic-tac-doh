@@ -63,7 +63,7 @@ outcomeToString outcome =
             "You lost!"
 
         CPUWinByExhaustion ->
-            "The you have no legal moves, so you lost!"
+            "You have no legal moves, so you lost!"
 
         Tie ->
             "No pieces are left so it's a tie"
