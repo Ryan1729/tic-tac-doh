@@ -117,45 +117,55 @@ cpuTurn : Model -> Maybe Model
 cpuTurn model =
     if model.outcome == TBD && model.player == Model.CPU then
         let
-            _ =
-                Debug.log "cpu sees this board" model.board
-
-            availableBoardIdSizePairs : List ( BoardId, Size )
-            availableBoardIdSizePairs =
-                Model.getAvailableBoardIdSizePairs model.board model.stash
-
-            availableEdgeIdSizePairs : List ( EdgeId, Size )
-            availableEdgeIdSizePairs =
-                Model.getAvailableEdgeIdSizePairs model.board model.stash
-
             moves : List Move
             moves =
-                (List.map BoardMove availableBoardIdSizePairs
-                    ++ List.map EdgeMove availableEdgeIdSizePairs
-                )
-                    |> shuffle (Random.initialSeed 42)
-
-            maybeWinningMove =
-                Extras.find (applyMove model >> Model.getOutcome >> (==) Model.CPUWin) moves
+                getMoves model
         in
-            case maybeWinningMove of
-                Just move ->
-                    move
-                        |> Debug.log "Winner"
-                        |> applyMove model
-                        |> Just
-
-                Nothing ->
-                    let
-                        maybeMove =
-                            Random.step (Random.sample moves) (Random.initialSeed 42)
-                                |> fst
-                                |> Debug.log ""
-                    in
-                        Maybe.map (applyMove model) maybeMove
+            Extras.find (winningMove model) moves
+                |> Extras.orElseLazy (\() -> Extras.find (nonLosingMove model) moves)
+                |> Extras.orElseLazy (\() -> Random.step (Random.sample moves) (Random.initialSeed 42) |> fst)
+                |> Maybe.map (applyMove model)
     else
         Nothing
-            |> Debug.log "?"
+
+
+getMoves : Model -> List Move
+getMoves model =
+    let
+        availableBoardIdSizePairs : List ( BoardId, Size )
+        availableBoardIdSizePairs =
+            Model.getAvailableBoardIdSizePairs model.board model.stash
+
+        availableEdgeIdSizePairs : List ( EdgeId, Size )
+        availableEdgeIdSizePairs =
+            Model.getAvailableEdgeIdSizePairs model.board model.stash
+    in
+        (List.map BoardMove availableBoardIdSizePairs
+            ++ List.map EdgeMove availableEdgeIdSizePairs
+        )
+            |> shuffle (Random.initialSeed 42)
+
+
+winningMove : Model -> Move -> Bool
+winningMove model =
+    applyMove model >> Model.getOutcome >> (==) Model.CPUWin
+
+
+nonLosingMove : Model -> Move -> Bool
+nonLosingMove model move =
+    let
+        potentialFuture =
+            applyMove model move
+
+        potentialFutureMoves =
+            getMoves potentialFuture
+    in
+        case Extras.find (winningMove model) potentialFutureMoves of
+            Just _ ->
+                False
+
+            Nothing ->
+                True
 
 
 shuffle : Seed -> List a -> List a

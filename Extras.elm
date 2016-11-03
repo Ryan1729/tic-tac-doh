@@ -14,3 +14,17 @@ find predicate list =
                 Just first
             else
                 find predicate rest
+
+
+
+-- from https://github.com/elm-community/maybe-extra
+
+
+orElseLazy : (() -> Maybe a) -> Maybe a -> Maybe a
+orElseLazy fma mb =
+    case mb of
+        Nothing ->
+            fma ()
+
+        Just _ ->
+            mb
