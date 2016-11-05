@@ -17829,7 +17829,7 @@ var _user$project$Model$placeOnEdge = F3(
 				var _p54 = boardId;
 				switch (_p54.ctor) {
 					case 'EdgeZeroZero':
-						return A9(
+						return (_elm_lang$core$Native_Utils.eq(s1, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(s3, _user$project$Model$EmptyStack)) ? board : A9(
 							_user$project$Model$threeByThree,
 							_user$project$Model$Single(size),
 							s1,
@@ -17841,7 +17841,7 @@ var _user$project$Model$placeOnEdge = F3(
 							s5,
 							s6);
 					case 'EdgeThreeZero':
-						return A9(
+						return (_elm_lang$core$Native_Utils.eq(s2, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(s4, _user$project$Model$EmptyStack)) ? board : A9(
 							_user$project$Model$threeByThree,
 							s1,
 							s2,
@@ -17877,7 +17877,7 @@ var _user$project$Model$placeOnEdge = F3(
 							s6,
 							_user$project$Model$EmptyStack);
 					case 'EdgeZeroTwo':
-						return A9(
+						return (_elm_lang$core$Native_Utils.eq(s3, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(s5, _user$project$Model$EmptyStack)) ? board : A9(
 							_user$project$Model$threeByThree,
 							_user$project$Model$EmptyStack,
 							s1,
@@ -17889,7 +17889,7 @@ var _user$project$Model$placeOnEdge = F3(
 							s5,
 							s6);
 					case 'EdgeThreeTwo':
-						return A9(
+						return (_elm_lang$core$Native_Utils.eq(s4, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(s6, _user$project$Model$EmptyStack)) ? board : A9(
 							_user$project$Model$threeByThree,
 							s1,
 							s2,
@@ -17914,7 +17914,7 @@ var _user$project$Model$placeOnEdge = F3(
 				var _p56 = boardId;
 				switch (_p56.ctor) {
 					case 'EdgeZeroZero':
-						return A9(
+						return (_elm_lang$core$Native_Utils.eq(s1, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(s2, _user$project$Model$EmptyStack)) ? board : A9(
 							_user$project$Model$threeByThree,
 							_user$project$Model$Single(size),
 							_user$project$Model$EmptyStack,
@@ -17938,7 +17938,7 @@ var _user$project$Model$placeOnEdge = F3(
 							s5,
 							s6);
 					case 'EdgeTwoZero':
-						return A9(
+						return (_elm_lang$core$Native_Utils.eq(s2, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(s3, _user$project$Model$EmptyStack)) ? board : A9(
 							_user$project$Model$threeByThree,
 							_user$project$Model$EmptyStack,
 							_user$project$Model$EmptyStack,
@@ -17950,7 +17950,7 @@ var _user$project$Model$placeOnEdge = F3(
 							s5,
 							s6);
 					case 'EdgeZeroThree':
-						return A9(
+						return (_elm_lang$core$Native_Utils.eq(s4, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(s5, _user$project$Model$EmptyStack)) ? board : A9(
 							_user$project$Model$threeByThree,
 							s1,
 							s2,
@@ -17974,7 +17974,7 @@ var _user$project$Model$placeOnEdge = F3(
 							_user$project$Model$Single(size),
 							_user$project$Model$EmptyStack);
 					case 'EdgeTwoThree':
-						return A9(
+						return (_elm_lang$core$Native_Utils.eq(s5, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(s6, _user$project$Model$EmptyStack)) ? board : A9(
 							_user$project$Model$threeByThree,
 							s1,
 							s2,
@@ -18375,11 +18375,53 @@ var _user$project$Model$getAvailableEdgeIds = function (board) {
 										[]) : _elm_lang$core$Native_List.fromArray(
 										[_user$project$Model$EdgeThreeThree])))))));
 		case 'TwoByThree':
-			return _elm_lang$core$Native_List.fromArray(
-				[_user$project$Model$EdgeZeroZero, _user$project$Model$EdgeThreeZero, _user$project$Model$EdgeZeroOne, _user$project$Model$EdgeThreeOne, _user$project$Model$EdgeZeroTwo, _user$project$Model$EdgeThreeTwo]);
+			var _p84 = _p82._0;
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				(_elm_lang$core$Native_Utils.eq(_p84.zeroZero, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p84.zeroOne, _user$project$Model$EmptyStack)) ? _elm_lang$core$Native_List.fromArray(
+					[]) : _elm_lang$core$Native_List.fromArray(
+					[_user$project$Model$EdgeZeroZero]),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					(_elm_lang$core$Native_Utils.eq(_p84.oneZero, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p84.oneOne, _user$project$Model$EmptyStack)) ? _elm_lang$core$Native_List.fromArray(
+						[]) : _elm_lang$core$Native_List.fromArray(
+						[_user$project$Model$EdgeThreeZero]),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Native_List.fromArray(
+							[_user$project$Model$EdgeZeroOne, _user$project$Model$EdgeThreeOne]),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							(_elm_lang$core$Native_Utils.eq(_p84.zeroOne, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p84.zeroTwo, _user$project$Model$EmptyStack)) ? _elm_lang$core$Native_List.fromArray(
+								[]) : _elm_lang$core$Native_List.fromArray(
+								[_user$project$Model$EdgeZeroTwo]),
+							(_elm_lang$core$Native_Utils.eq(_p84.oneOne, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p84.oneTwo, _user$project$Model$EmptyStack)) ? _elm_lang$core$Native_List.fromArray(
+								[]) : _elm_lang$core$Native_List.fromArray(
+								[_user$project$Model$EdgeThreeTwo])))));
 		case 'ThreeByTwo':
-			return _elm_lang$core$Native_List.fromArray(
-				[_user$project$Model$EdgeZeroZero, _user$project$Model$EdgeOneZero, _user$project$Model$EdgeTwoZero, _user$project$Model$EdgeZeroThree, _user$project$Model$EdgeOneThree, _user$project$Model$EdgeTwoThree]);
+			var _p85 = _p82._0;
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				(_elm_lang$core$Native_Utils.eq(_p85.zeroZero, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p85.oneZero, _user$project$Model$EmptyStack)) ? _elm_lang$core$Native_List.fromArray(
+					[]) : _elm_lang$core$Native_List.fromArray(
+					[_user$project$Model$EdgeZeroZero]),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					(_elm_lang$core$Native_Utils.eq(_p85.oneZero, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p85.twoZero, _user$project$Model$EmptyStack)) ? _elm_lang$core$Native_List.fromArray(
+						[]) : _elm_lang$core$Native_List.fromArray(
+						[_user$project$Model$EdgeTwoZero]),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Native_List.fromArray(
+							[_user$project$Model$EdgeOneZero, _user$project$Model$EdgeOneThree]),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							(_elm_lang$core$Native_Utils.eq(_p85.zeroOne, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p85.oneOne, _user$project$Model$EmptyStack)) ? _elm_lang$core$Native_List.fromArray(
+								[]) : _elm_lang$core$Native_List.fromArray(
+								[_user$project$Model$EdgeZeroThree]),
+							(_elm_lang$core$Native_Utils.eq(_p85.oneOne, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p85.twoOne, _user$project$Model$EmptyStack)) ? _elm_lang$core$Native_List.fromArray(
+								[]) : _elm_lang$core$Native_List.fromArray(
+								[_user$project$Model$EdgeTwoThree])))));
 		default:
 			return _elm_lang$core$Native_List.fromArray(
 				[]);
@@ -19451,14 +19493,17 @@ var _user$project$View$edgeSpaces = F2(
 						selected)
 					]);
 			case 'TwoByThree':
+				var _p15 = _p11._0;
+				var _p13 = A2(_elm_lang$core$Debug$log, 'oneTwo', _p15.oneTwo);
+				var _p14 = A2(_elm_lang$core$Debug$log, 'oneOne', _p15.oneOne);
 				return _elm_lang$core$Native_List.fromArray(
 					[
-						A3(
+						(_elm_lang$core$Native_Utils.eq(_p15.zeroZero, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p15.zeroOne, _user$project$Model$EmptyStack)) ? _user$project$PyramidView$nullSvg : A3(
 						_user$project$View$edgeSpace,
 						A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$spaceOffset, 0 - _user$project$View$threeHalfsSpaceOffset),
 						_user$project$Model$EdgeZeroZero,
 						selected),
-						A3(
+						(_elm_lang$core$Native_Utils.eq(_p15.oneZero, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p15.oneOne, _user$project$Model$EmptyStack)) ? _user$project$PyramidView$nullSvg : A3(
 						_user$project$View$edgeSpace,
 						A2(_user$project$View$fromBoardOffset, _user$project$View$doubleSpaceOffset, _user$project$View$threeHalfsSpaceOffset),
 						_user$project$Model$EdgeThreeZero,
@@ -19473,21 +19518,24 @@ var _user$project$View$edgeSpaces = F2(
 						A2(_user$project$View$fromBoardOffset, _user$project$View$spaceOffset, _user$project$View$fiveHalfsSpaceOffset),
 						_user$project$Model$EdgeThreeOne,
 						selected),
-						A3(
+						(_elm_lang$core$Native_Utils.eq(_p15.zeroOne, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p15.zeroTwo, _user$project$Model$EmptyStack)) ? _user$project$PyramidView$nullSvg : A3(
 						_user$project$View$edgeSpace,
 						A2(_user$project$View$fromBoardOffset, 0 - (3 * _user$project$View$spaceOffset), _user$project$View$halfSpaceOffset),
 						_user$project$Model$EdgeZeroTwo,
 						selected),
-						A3(
+						(_elm_lang$core$Native_Utils.eq(_p15.oneOne, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p15.oneTwo, _user$project$Model$EmptyStack)) ? _user$project$PyramidView$nullSvg : A3(
 						_user$project$View$edgeSpace,
 						A2(_user$project$View$fromBoardOffset, 0, 3.5 * _user$project$View$spaceOffset),
 						_user$project$Model$EdgeThreeTwo,
 						selected)
 					]);
 			case 'ThreeByTwo':
+				var _p18 = _p11._0;
+				var _p16 = A2(_elm_lang$core$Debug$log, 'twoOne', _p18.twoOne);
+				var _p17 = A2(_elm_lang$core$Debug$log, 'oneOne', _p18.oneOne);
 				return _elm_lang$core$Native_List.fromArray(
 					[
-						A3(
+						(_elm_lang$core$Native_Utils.eq(_p18.zeroZero, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p18.oneZero, _user$project$Model$EmptyStack)) ? _user$project$PyramidView$nullSvg : A3(
 						_user$project$View$edgeSpace,
 						A2(_user$project$View$fromBoardOffset, _user$project$View$halfSpaceOffset, 0 - _user$project$View$threeHalfsSpaceOffset),
 						_user$project$Model$EdgeZeroZero,
@@ -19497,12 +19545,12 @@ var _user$project$View$edgeSpaces = F2(
 						A2(_user$project$View$fromBoardOffset, _user$project$View$threeHalfsSpaceOffset, 0 - _user$project$View$halfSpaceOffset),
 						_user$project$Model$EdgeOneZero,
 						selected),
-						A3(
+						(_elm_lang$core$Native_Utils.eq(_p18.oneZero, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p18.twoZero, _user$project$Model$EmptyStack)) ? _user$project$PyramidView$nullSvg : A3(
 						_user$project$View$edgeSpace,
 						A2(_user$project$View$fromBoardOffset, _user$project$View$fiveHalfsSpaceOffset, _user$project$View$halfSpaceOffset),
 						_user$project$Model$EdgeTwoZero,
 						selected),
-						A3(
+						(_elm_lang$core$Native_Utils.eq(_p18.zeroOne, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p18.oneOne, _user$project$Model$EmptyStack)) ? _user$project$PyramidView$nullSvg : A3(
 						_user$project$View$edgeSpace,
 						A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$fiveHalfsSpaceOffset, _user$project$View$threeHalfsSpaceOffset),
 						_user$project$Model$EdgeZeroThree,
@@ -19512,7 +19560,7 @@ var _user$project$View$edgeSpaces = F2(
 						A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$threeHalfsSpaceOffset, _user$project$View$fiveHalfsSpaceOffset),
 						_user$project$Model$EdgeOneThree,
 						selected),
-						A3(
+						(_elm_lang$core$Native_Utils.eq(_p18.oneOne, _user$project$Model$EmptyStack) && _elm_lang$core$Native_Utils.eq(_p18.twoOne, _user$project$Model$EmptyStack)) ? _user$project$PyramidView$nullSvg : A3(
 						_user$project$View$edgeSpace,
 						A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$halfSpaceOffset, 3.5 * _user$project$View$spaceOffset),
 						_user$project$Model$EdgeTwoThree,
@@ -19526,8 +19574,8 @@ var _user$project$View$edgeSpaces = F2(
 var _user$project$View$renderBoard = F2(
 	function (selected, board) {
 		var determinedSpace = function () {
-			var _p13 = board;
-			switch (_p13.ctor) {
+			var _p19 = board;
+			switch (_p19.ctor) {
 				case 'EmptyBoard':
 					return A4(
 						_user$project$View$spaceAndStack,
@@ -19540,7 +19588,7 @@ var _user$project$View$renderBoard = F2(
 						_user$project$View$spaceAndStack,
 						_user$project$Model$ZeroZero,
 						selected,
-						_p13._0,
+						_p19._0,
 						A2(_user$project$View$fromBoardOffset, 0, _user$project$View$spaceOffset));
 				case 'OneByTwo':
 					return A2(
@@ -19549,13 +19597,13 @@ var _user$project$View$renderBoard = F2(
 							_user$project$View$spaceAndStack,
 							_user$project$Model$ZeroZero,
 							selected,
-							_p13._0,
+							_p19._0,
 							A2(_user$project$View$fromBoardOffset, _user$project$View$halfSpaceOffset, _user$project$View$halfSpaceOffset)),
 						A4(
 							_user$project$View$spaceAndStack,
 							_user$project$Model$ZeroOne,
 							selected,
-							_p13._1,
+							_p19._1,
 							A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$halfSpaceOffset, _user$project$View$threeHalfsSpaceOffset)));
 				case 'TwoByOne':
 					return A2(
@@ -19564,13 +19612,13 @@ var _user$project$View$renderBoard = F2(
 							_user$project$View$spaceAndStack,
 							_user$project$Model$ZeroZero,
 							selected,
-							_p13._0,
+							_p19._0,
 							A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$halfSpaceOffset, _user$project$View$halfSpaceOffset)),
 						A4(
 							_user$project$View$spaceAndStack,
 							_user$project$Model$OneZero,
 							selected,
-							_p13._1,
+							_p19._1,
 							A2(_user$project$View$fromBoardOffset, _user$project$View$halfSpaceOffset, _user$project$View$threeHalfsSpaceOffset)));
 				case 'OneByThree':
 					return A2(
@@ -19579,7 +19627,7 @@ var _user$project$View$renderBoard = F2(
 							_user$project$View$spaceAndStack,
 							_user$project$Model$ZeroZero,
 							selected,
-							_p13._0,
+							_p19._0,
 							A2(_user$project$View$fromBoardOffset, _user$project$View$halfSpaceOffset, 0)),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
@@ -19587,13 +19635,13 @@ var _user$project$View$renderBoard = F2(
 								_user$project$View$spaceAndStack,
 								_user$project$Model$OneZero,
 								selected,
-								_p13._1,
+								_p19._1,
 								A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$halfSpaceOffset, _user$project$View$spaceOffset)),
 							A4(
 								_user$project$View$spaceAndStack,
 								_user$project$Model$TwoZero,
 								selected,
-								_p13._2,
+								_p19._2,
 								A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$threeHalfsSpaceOffset, _user$project$View$doubleSpaceOffset))));
 				case 'ThreeByOne':
 					return A2(
@@ -19602,7 +19650,7 @@ var _user$project$View$renderBoard = F2(
 							_user$project$View$spaceAndStack,
 							_user$project$Model$ZeroZero,
 							selected,
-							_p13._0,
+							_p19._0,
 							A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$halfSpaceOffset, _user$project$View$halfSpaceOffset)),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
@@ -19610,26 +19658,26 @@ var _user$project$View$renderBoard = F2(
 								_user$project$View$spaceAndStack,
 								_user$project$Model$ZeroOne,
 								selected,
-								_p13._1,
+								_p19._1,
 								A2(_user$project$View$fromBoardOffset, _user$project$View$halfSpaceOffset, _user$project$View$threeHalfsSpaceOffset)),
 							A4(
 								_user$project$View$spaceAndStack,
 								_user$project$Model$ZeroTwo,
 								selected,
-								_p13._2,
+								_p19._2,
 								A2(_user$project$View$fromBoardOffset, _user$project$View$threeHalfsSpaceOffset, _user$project$View$fiveHalfsSpaceOffset))));
 				case 'TwoByTwo':
-					var _p14 = _p13._0;
+					var _p20 = _p19._0;
 					return A2(
 						_elm_lang$core$Basics_ops['++'],
-						A4(_user$project$View$spaceAndStack, _user$project$Model$ZeroZero, selected, _p14.zeroZero, _user$project$View$atBoardOffset),
+						A4(_user$project$View$spaceAndStack, _user$project$Model$ZeroZero, selected, _p20.zeroZero, _user$project$View$atBoardOffset),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							A4(
 								_user$project$View$spaceAndStack,
 								_user$project$Model$OneZero,
 								selected,
-								_p14.oneZero,
+								_p20.oneZero,
 								A2(_user$project$View$fromBoardOffset, _user$project$View$spaceOffset, _user$project$View$spaceOffset)),
 							A2(
 								_elm_lang$core$Basics_ops['++'],
@@ -19637,23 +19685,23 @@ var _user$project$View$renderBoard = F2(
 									_user$project$View$spaceAndStack,
 									_user$project$Model$ZeroOne,
 									selected,
-									_p14.zeroOne,
+									_p20.zeroOne,
 									A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$spaceOffset, _user$project$View$spaceOffset)),
 								A4(
 									_user$project$View$spaceAndStack,
 									_user$project$Model$OneOne,
 									selected,
-									_p14.oneOne,
+									_p20.oneOne,
 									A2(_user$project$View$fromBoardOffset, 0, _user$project$View$doubleSpaceOffset)))));
 				case 'TwoByThree':
-					var _p15 = _p13._0;
+					var _p21 = _p19._0;
 					return A2(
 						_elm_lang$core$Basics_ops['++'],
 						A4(
 							_user$project$View$spaceAndStack,
 							_user$project$Model$ZeroZero,
 							selected,
-							_p15.zeroZero,
+							_p21.zeroZero,
 							A2(_user$project$View$fromBoardOffset, 0, 0 - _user$project$View$halfSpaceOffset)),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
@@ -19661,7 +19709,7 @@ var _user$project$View$renderBoard = F2(
 								_user$project$View$spaceAndStack,
 								_user$project$Model$OneZero,
 								selected,
-								_p15.oneZero,
+								_p21.oneZero,
 								A2(_user$project$View$fromBoardOffset, _user$project$View$spaceOffset, _user$project$View$halfSpaceOffset)),
 							A2(
 								_elm_lang$core$Basics_ops['++'],
@@ -19669,7 +19717,7 @@ var _user$project$View$renderBoard = F2(
 									_user$project$View$spaceAndStack,
 									_user$project$Model$ZeroOne,
 									selected,
-									_p15.zeroOne,
+									_p21.zeroOne,
 									A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$spaceOffset, _user$project$View$halfSpaceOffset)),
 								A2(
 									_elm_lang$core$Basics_ops['++'],
@@ -19677,7 +19725,7 @@ var _user$project$View$renderBoard = F2(
 										_user$project$View$spaceAndStack,
 										_user$project$Model$OneOne,
 										selected,
-										_p15.oneOne,
+										_p21.oneOne,
 										A2(_user$project$View$fromBoardOffset, 0, _user$project$View$threeHalfsSpaceOffset)),
 									A2(
 										_elm_lang$core$Basics_ops['++'],
@@ -19685,23 +19733,23 @@ var _user$project$View$renderBoard = F2(
 											_user$project$View$spaceAndStack,
 											_user$project$Model$ZeroTwo,
 											selected,
-											_p15.zeroTwo,
+											_p21.zeroTwo,
 											A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$doubleSpaceOffset, _user$project$View$threeHalfsSpaceOffset)),
 										A4(
 											_user$project$View$spaceAndStack,
 											_user$project$Model$OneTwo,
 											selected,
-											_p15.oneTwo,
+											_p21.oneTwo,
 											A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$spaceOffset, _user$project$View$fiveHalfsSpaceOffset)))))));
 				case 'ThreeByTwo':
-					var _p16 = _p13._0;
+					var _p22 = _p19._0;
 					return A2(
 						_elm_lang$core$Basics_ops['++'],
 						A4(
 							_user$project$View$spaceAndStack,
 							_user$project$Model$ZeroZero,
 							selected,
-							_p16.zeroZero,
+							_p22.zeroZero,
 							A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$halfSpaceOffset, 0 - _user$project$View$halfSpaceOffset)),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
@@ -19709,7 +19757,7 @@ var _user$project$View$renderBoard = F2(
 								_user$project$View$spaceAndStack,
 								_user$project$Model$OneZero,
 								selected,
-								_p16.oneZero,
+								_p22.oneZero,
 								A2(_user$project$View$fromBoardOffset, _user$project$View$halfSpaceOffset, _user$project$View$halfSpaceOffset)),
 							A2(
 								_elm_lang$core$Basics_ops['++'],
@@ -19717,7 +19765,7 @@ var _user$project$View$renderBoard = F2(
 									_user$project$View$spaceAndStack,
 									_user$project$Model$TwoZero,
 									selected,
-									_p16.twoZero,
+									_p22.twoZero,
 									A2(_user$project$View$fromBoardOffset, _user$project$View$threeHalfsSpaceOffset, _user$project$View$threeHalfsSpaceOffset)),
 								A2(
 									_elm_lang$core$Basics_ops['++'],
@@ -19725,7 +19773,7 @@ var _user$project$View$renderBoard = F2(
 										_user$project$View$spaceAndStack,
 										_user$project$Model$ZeroOne,
 										selected,
-										_p16.zeroOne,
+										_p22.zeroOne,
 										A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$threeHalfsSpaceOffset, _user$project$View$halfSpaceOffset)),
 									A2(
 										_elm_lang$core$Basics_ops['++'],
@@ -19733,23 +19781,23 @@ var _user$project$View$renderBoard = F2(
 											_user$project$View$spaceAndStack,
 											_user$project$Model$OneOne,
 											selected,
-											_p16.oneOne,
+											_p22.oneOne,
 											A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$halfSpaceOffset, _user$project$View$threeHalfsSpaceOffset)),
 										A4(
 											_user$project$View$spaceAndStack,
 											_user$project$Model$TwoOne,
 											selected,
-											_p16.twoOne,
+											_p22.twoOne,
 											A2(_user$project$View$fromBoardOffset, _user$project$View$halfSpaceOffset, _user$project$View$fiveHalfsSpaceOffset)))))));
 				default:
-					var _p17 = _p13._0;
+					var _p23 = _p19._0;
 					return A2(
 						_elm_lang$core$Basics_ops['++'],
 						A4(
 							_user$project$View$spaceAndStack,
 							_user$project$Model$ZeroZero,
 							selected,
-							_p17.zeroZero,
+							_p23.zeroZero,
 							A2(_user$project$View$fromBoardOffset, 0, 0 - _user$project$View$spaceOffset)),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
@@ -19757,7 +19805,7 @@ var _user$project$View$renderBoard = F2(
 								_user$project$View$spaceAndStack,
 								_user$project$Model$OneZero,
 								selected,
-								_p17.oneZero,
+								_p23.oneZero,
 								A2(_user$project$View$fromBoardOffset, _user$project$View$spaceOffset, 0)),
 							A2(
 								_elm_lang$core$Basics_ops['++'],
@@ -19765,7 +19813,7 @@ var _user$project$View$renderBoard = F2(
 									_user$project$View$spaceAndStack,
 									_user$project$Model$TwoZero,
 									selected,
-									_p17.twoZero,
+									_p23.twoZero,
 									A2(_user$project$View$fromBoardOffset, _user$project$View$doubleSpaceOffset, _user$project$View$spaceOffset)),
 								A2(
 									_elm_lang$core$Basics_ops['++'],
@@ -19773,7 +19821,7 @@ var _user$project$View$renderBoard = F2(
 										_user$project$View$spaceAndStack,
 										_user$project$Model$ZeroOne,
 										selected,
-										_p17.zeroOne,
+										_p23.zeroOne,
 										A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$spaceOffset, 0)),
 									A2(
 										_elm_lang$core$Basics_ops['++'],
@@ -19781,7 +19829,7 @@ var _user$project$View$renderBoard = F2(
 											_user$project$View$spaceAndStack,
 											_user$project$Model$OneOne,
 											selected,
-											_p17.oneOne,
+											_p23.oneOne,
 											A2(_user$project$View$fromBoardOffset, 0, _user$project$View$spaceOffset)),
 										A2(
 											_elm_lang$core$Basics_ops['++'],
@@ -19789,7 +19837,7 @@ var _user$project$View$renderBoard = F2(
 												_user$project$View$spaceAndStack,
 												_user$project$Model$TwoOne,
 												selected,
-												_p17.twoOne,
+												_p23.twoOne,
 												A2(_user$project$View$fromBoardOffset, _user$project$View$spaceOffset, _user$project$View$doubleSpaceOffset)),
 											A2(
 												_elm_lang$core$Basics_ops['++'],
@@ -19797,7 +19845,7 @@ var _user$project$View$renderBoard = F2(
 													_user$project$View$spaceAndStack,
 													_user$project$Model$ZeroTwo,
 													selected,
-													_p17.zeroTwo,
+													_p23.zeroTwo,
 													A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$doubleSpaceOffset, _user$project$View$spaceOffset)),
 												A2(
 													_elm_lang$core$Basics_ops['++'],
@@ -19805,13 +19853,13 @@ var _user$project$View$renderBoard = F2(
 														_user$project$View$spaceAndStack,
 														_user$project$Model$OneTwo,
 														selected,
-														_p17.oneTwo,
+														_p23.oneTwo,
 														A2(_user$project$View$fromBoardOffset, 0 - _user$project$View$spaceOffset, _user$project$View$doubleSpaceOffset)),
 													A4(
 														_user$project$View$spaceAndStack,
 														_user$project$Model$TwoTwo,
 														selected,
-														_p17.twoTwo,
+														_p23.twoTwo,
 														A2(_user$project$View$fromBoardOffset, 0, 3 * _user$project$View$spaceOffset))))))))));
 			}
 		}();
@@ -19825,8 +19873,8 @@ var _user$project$View$renderBoard = F2(
 				determinedSpace));
 	});
 var _user$project$View$outcomeToString = function (outcome) {
-	var _p18 = outcome;
-	switch (_p18.ctor) {
+	var _p24 = outcome;
+	switch (_p24.ctor) {
 		case 'TBD':
 			return '';
 		case 'UserWin':
