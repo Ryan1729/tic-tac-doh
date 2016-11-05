@@ -765,23 +765,55 @@ getAvailableEdgeIds board =
                         [ EdgeThreeThree ]
                    )
 
-        TwoByThree _ ->
-            [ EdgeZeroZero
-            , EdgeThreeZero
-            , EdgeZeroOne
-            , EdgeThreeOne
-            , EdgeZeroTwo
-            , EdgeThreeTwo
-            ]
+        TwoByThree r ->
+            (if r.zeroZero == EmptyStack && r.zeroOne == EmptyStack then
+                []
+             else
+                [ EdgeZeroZero ]
+            )
+                ++ (if r.oneZero == EmptyStack && r.oneOne == EmptyStack then
+                        []
+                    else
+                        [ EdgeThreeZero ]
+                   )
+                ++ [ EdgeZeroOne
+                   , EdgeThreeOne
+                   ]
+                ++ (if r.zeroOne == EmptyStack && r.zeroTwo == EmptyStack then
+                        []
+                    else
+                        [ EdgeZeroTwo ]
+                   )
+                ++ (if r.oneOne == EmptyStack && r.oneTwo == EmptyStack then
+                        []
+                    else
+                        [ EdgeThreeTwo ]
+                   )
 
-        ThreeByTwo _ ->
-            [ EdgeZeroZero
-            , EdgeOneZero
-            , EdgeTwoZero
-            , EdgeZeroThree
-            , EdgeOneThree
-            , EdgeTwoThree
-            ]
+        ThreeByTwo r ->
+            (if r.zeroZero == EmptyStack && r.oneZero == EmptyStack then
+                []
+             else
+                [ EdgeZeroZero ]
+            )
+                ++ (if r.oneZero == EmptyStack && r.twoZero == EmptyStack then
+                        []
+                    else
+                        [ EdgeTwoZero ]
+                   )
+                ++ [ EdgeOneZero
+                   , EdgeOneThree
+                   ]
+                ++ (if r.zeroOne == EmptyStack && r.oneOne == EmptyStack then
+                        []
+                    else
+                        [ EdgeZeroThree ]
+                   )
+                ++ (if r.oneOne == EmptyStack && r.twoOne == EmptyStack then
+                        []
+                    else
+                        [ EdgeTwoThree ]
+                   )
 
         ThreeByThree _ ->
             []
@@ -1026,10 +1058,16 @@ placeOnEdge boardId size board =
             in
                 case boardId of
                     EdgeZeroZero ->
-                        threeByThree (Single size) s1 s2 EmptyStack s3 s4 EmptyStack s5 s6
+                        if s1 == EmptyStack && s3 == EmptyStack then
+                            board
+                        else
+                            threeByThree (Single size) s1 s2 EmptyStack s3 s4 EmptyStack s5 s6
 
                     EdgeThreeZero ->
-                        threeByThree s1 s2 (Single size) s3 s4 EmptyStack s5 s6 EmptyStack
+                        if s2 == EmptyStack && s4 == EmptyStack then
+                            board
+                        else
+                            threeByThree s1 s2 (Single size) s3 s4 EmptyStack s5 s6 EmptyStack
 
                     EdgeZeroOne ->
                         threeByThree EmptyStack s1 s2 (Single size) s3 s4 EmptyStack s5 s6
@@ -1038,10 +1076,16 @@ placeOnEdge boardId size board =
                         threeByThree s1 s2 EmptyStack s3 s4 (Single size) s5 s6 EmptyStack
 
                     EdgeZeroTwo ->
-                        threeByThree EmptyStack s1 s2 EmptyStack s3 s4 (Single size) s5 s6
+                        if s3 == EmptyStack && s5 == EmptyStack then
+                            board
+                        else
+                            threeByThree EmptyStack s1 s2 EmptyStack s3 s4 (Single size) s5 s6
 
                     EdgeThreeTwo ->
-                        threeByThree s1 s2 EmptyStack s3 s4 EmptyStack s5 s6 (Single size)
+                        if s4 == EmptyStack && s6 == EmptyStack then
+                            board
+                        else
+                            threeByThree s1 s2 EmptyStack s3 s4 EmptyStack s5 s6 (Single size)
 
                     _ ->
                         board
@@ -1068,22 +1112,34 @@ placeOnEdge boardId size board =
             in
                 case boardId of
                     EdgeZeroZero ->
-                        threeByThree (Single size) EmptyStack EmptyStack s1 s2 s3 s4 s5 s6
+                        if s1 == EmptyStack && s2 == EmptyStack then
+                            board
+                        else
+                            threeByThree (Single size) EmptyStack EmptyStack s1 s2 s3 s4 s5 s6
 
                     EdgeOneZero ->
                         threeByThree EmptyStack (Single size) EmptyStack s1 s2 s3 s4 s5 s6
 
                     EdgeTwoZero ->
-                        threeByThree EmptyStack EmptyStack (Single size) s1 s2 s3 s4 s5 s6
+                        if s2 == EmptyStack && s3 == EmptyStack then
+                            board
+                        else
+                            threeByThree EmptyStack EmptyStack (Single size) s1 s2 s3 s4 s5 s6
 
                     EdgeZeroThree ->
-                        threeByThree s1 s2 s3 s4 s5 s6 (Single size) EmptyStack EmptyStack
+                        if s4 == EmptyStack && s5 == EmptyStack then
+                            board
+                        else
+                            threeByThree s1 s2 s3 s4 s5 s6 (Single size) EmptyStack EmptyStack
 
                     EdgeOneThree ->
                         threeByThree s1 s2 s3 s4 s5 s6 EmptyStack (Single size) EmptyStack
 
                     EdgeTwoThree ->
-                        threeByThree s1 s2 s3 s4 s5 s6 EmptyStack EmptyStack (Single size)
+                        if s5 == EmptyStack && s6 == EmptyStack then
+                            board
+                        else
+                            threeByThree s1 s2 s3 s4 s5 s6 EmptyStack EmptyStack (Single size)
 
                     _ ->
                         board

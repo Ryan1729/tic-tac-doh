@@ -248,23 +248,61 @@ edgeSpaces selected board =
                 edgeSpace (fromBoardOffset 0 (4 * spaceOffset)) EdgeThreeThree selected
             ]
 
-        TwoByThree _ ->
-            [ edgeSpace (fromBoardOffset -spaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
-            , edgeSpace (fromBoardOffset doubleSpaceOffset threeHalfsSpaceOffset) EdgeThreeZero selected
-            , edgeSpace (fromBoardOffset -doubleSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
-            , edgeSpace (fromBoardOffset spaceOffset fiveHalfsSpaceOffset) EdgeThreeOne selected
-            , edgeSpace (fromBoardOffset -(3 * spaceOffset) halfSpaceOffset) EdgeZeroTwo selected
-            , edgeSpace (fromBoardOffset 0 (3.5 * spaceOffset)) EdgeThreeTwo selected
-            ]
+        TwoByThree r ->
+            let
+                _ =
+                    Debug.log "oneOne" r.oneOne
 
-        ThreeByTwo _ ->
-            [ edgeSpace (fromBoardOffset halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
-            , edgeSpace (fromBoardOffset threeHalfsSpaceOffset -halfSpaceOffset) EdgeOneZero selected
-            , edgeSpace (fromBoardOffset fiveHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
-            , edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeZeroThree selected
-            , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeOneThree selected
-            , edgeSpace (fromBoardOffset -halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoThree selected
-            ]
+                _ =
+                    Debug.log "oneTwo" r.oneTwo
+            in
+                [ if r.zeroZero == EmptyStack && r.zeroOne == EmptyStack then
+                    PyramidView.nullSvg
+                  else
+                    edgeSpace (fromBoardOffset -spaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
+                , if r.oneZero == EmptyStack && r.oneOne == EmptyStack then
+                    PyramidView.nullSvg
+                  else
+                    edgeSpace (fromBoardOffset doubleSpaceOffset threeHalfsSpaceOffset) EdgeThreeZero selected
+                , edgeSpace (fromBoardOffset -doubleSpaceOffset -halfSpaceOffset) EdgeZeroOne selected
+                , edgeSpace (fromBoardOffset spaceOffset fiveHalfsSpaceOffset) EdgeThreeOne selected
+                , if r.zeroOne == EmptyStack && r.zeroTwo == EmptyStack then
+                    PyramidView.nullSvg
+                  else
+                    edgeSpace (fromBoardOffset -(3 * spaceOffset) halfSpaceOffset) EdgeZeroTwo selected
+                , if r.oneOne == EmptyStack && r.oneTwo == EmptyStack then
+                    PyramidView.nullSvg
+                  else
+                    edgeSpace (fromBoardOffset 0 (3.5 * spaceOffset)) EdgeThreeTwo selected
+                ]
+
+        ThreeByTwo r ->
+            let
+                _ =
+                    Debug.log "oneOne" r.oneOne
+
+                _ =
+                    Debug.log "twoOne" r.twoOne
+            in
+                [ if r.zeroZero == EmptyStack && r.oneZero == EmptyStack then
+                    PyramidView.nullSvg
+                  else
+                    edgeSpace (fromBoardOffset halfSpaceOffset -threeHalfsSpaceOffset) EdgeZeroZero selected
+                , edgeSpace (fromBoardOffset threeHalfsSpaceOffset -halfSpaceOffset) EdgeOneZero selected
+                , if r.oneZero == EmptyStack && r.twoZero == EmptyStack then
+                    PyramidView.nullSvg
+                  else
+                    edgeSpace (fromBoardOffset fiveHalfsSpaceOffset halfSpaceOffset) EdgeTwoZero selected
+                , if r.zeroOne == EmptyStack && r.oneOne == EmptyStack then
+                    PyramidView.nullSvg
+                  else
+                    edgeSpace (fromBoardOffset -fiveHalfsSpaceOffset threeHalfsSpaceOffset) EdgeZeroThree selected
+                , edgeSpace (fromBoardOffset -threeHalfsSpaceOffset fiveHalfsSpaceOffset) EdgeOneThree selected
+                , if r.oneOne == EmptyStack && r.twoOne == EmptyStack then
+                    PyramidView.nullSvg
+                  else
+                    edgeSpace (fromBoardOffset -halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoThree selected
+                ]
 
         _ ->
             []
