@@ -221,19 +221,31 @@ edgeSpaces selected board =
             , edgeSpace (fromBoardOffset halfSpaceOffset (3.5 * spaceOffset)) EdgeTwoTwo selected
             ]
 
-        TwoByTwo _ ->
-            [ edgeSpace (fromBoardOffset 0 -doubleSpaceOffset) EdgeZeroZero selected
+        TwoByTwo r ->
+            [ if r.zeroZero == EmptyStack then
+                PyramidView.nullSvg
+              else
+                edgeSpace (fromBoardOffset 0 -doubleSpaceOffset) EdgeZeroZero selected
             , edgeSpace (fromBoardOffset spaceOffset -spaceOffset) EdgeOneZero selected
             , edgeSpace (fromBoardOffset doubleSpaceOffset 0) EdgeTwoZero selected
-            , edgeSpace (fromBoardOffset (3 * spaceOffset) spaceOffset) EdgeThreeZero selected
+            , if r.oneZero == EmptyStack then
+                PyramidView.nullSvg
+              else
+                edgeSpace (fromBoardOffset (3 * spaceOffset) spaceOffset) EdgeThreeZero selected
             , edgeSpace (fromBoardOffset -spaceOffset -spaceOffset) EdgeZeroOne selected
             , edgeSpace (fromBoardOffset doubleSpaceOffset doubleSpaceOffset) EdgeThreeOne selected
             , edgeSpace (fromBoardOffset -doubleSpaceOffset 0) EdgeZeroTwo selected
             , edgeSpace (fromBoardOffset spaceOffset (3 * spaceOffset)) EdgeThreeTwo selected
-            , edgeSpace (fromBoardOffset -(3 * spaceOffset) spaceOffset) EdgeZeroThree selected
+            , if r.zeroOne == EmptyStack then
+                PyramidView.nullSvg
+              else
+                edgeSpace (fromBoardOffset -(3 * spaceOffset) spaceOffset) EdgeZeroThree selected
             , edgeSpace (fromBoardOffset -doubleSpaceOffset doubleSpaceOffset) EdgeOneThree selected
             , edgeSpace (fromBoardOffset -spaceOffset (3 * spaceOffset)) EdgeTwoThree selected
-            , edgeSpace (fromBoardOffset 0 (4 * spaceOffset)) EdgeThreeThree selected
+            , if r.oneOne == EmptyStack then
+                PyramidView.nullSvg
+              else
+                edgeSpace (fromBoardOffset 0 (4 * spaceOffset)) EdgeThreeThree selected
             ]
 
         TwoByThree _ ->
